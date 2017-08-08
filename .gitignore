@@ -1,0 +1,6 @@
+/.idea/
+
+/release/
+
+*.iml
+assets.go

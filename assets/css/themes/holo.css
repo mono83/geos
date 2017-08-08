@@ -1,0 +1,51 @@
+
+input[type='text'], input[type='password'] {
+    /* You can set width to whatever you like */
+    width: 200px;
+    font-family: "Roboto", sans-serif;
+    font-size: 14px;
+    margin: 0;
+    padding: 2px 8px;
+    position: relative;
+    display: inline-block;
+    outline: none;
+    border: none;
+    background: bottom left linear-gradient(#a9a9a9, #a9a9a9) no-repeat, bottom center linear-gradient(#a9a9a9, #a9a9a9) repeat-x, bottom right linear-gradient(#a9a9a9, #a9a9a9) no-repeat;
+    background-size: 1px 6px, 1px 1px, 1px 6px;
+    color: white;
+}
+input[type='text']:hover, input[type='text']:focus, input[type='password']:hover, input[type='password']:focus {
+    background: bottom left linear-gradient(#0099cc, #0099cc) no-repeat, bottom center linear-gradient(#0099cc, #0099cc) repeat-x, bottom right linear-gradient(#0099cc, #0099cc) no-repeat;
+    background-size: 1px 6px, 1px 1px, 1px 6px;
+    color: #0099cc;
+}
+
+input:disabled::-webkit-input-placeholder {color: transparent;}
+
+input[type='text']:disabled, input[type='password']:disabled {
+    background: none;
+    color: #999;
+}
+
+input[type='button'] {
+    background-color: #669900;
+    border-radius: 1px;
+    box-shadow: 0 0 0;
+    border: 1px solid transparent;
+    font: normal 15px "Roboto", sans-serif;
+    cursor: pointer;
+    color: white;
+}
+
+input[type='button']:hover, input[type='button']:focus {
+    background-color: #449d44;
+    border-color: #398439;
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+}
+
+body {margin: 0; padding: 0; background-color: black; color: white;}
+
+#connectWindow {background-color: #222; border-bottom: 2px solid #0099cc; padding: 5px; margin-bottom: 5px;}
+#connectWindow hr {height: 0; border: 0; border-bottom: 1px solid #666;}
+#connectWindow .logo {color: white; font: normal 14px "Roboto"; padding: 3px 10px;}
