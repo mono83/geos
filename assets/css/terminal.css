@@ -15,7 +15,8 @@ Cyan: #66d9ef
 #logWindow {font: normal 15px "Ubuntu Mono", monospace; margin-right: 210px;}
 #logWindow .group .header {padding: 0 5px; }
 #logWindow .group .header:hover { background-color: rgba(255, 255, 255, 0.1); }
-#logWindow .group .header > .title {font-weight: bold; color: white;}
+#logWindow .group .header > .title {font-weight: bold; color: white; display: inline-block; margin-right: 0.5em;}
+#logWindow .group .header > .application {font-weight: bold; color: #7ca223; display: inline-block; margin-right: 0.5em;}
 #logWindow .group .header > .time { font-weight: bold; color: #ff0086; }
 #logWindow .group .header:hover > .time { color: #ff0086; }
 #logWindow .box { display: inline-block; margin-right: .5em; }
@@ -46,8 +47,16 @@ Cyan: #66d9ef
 #logWindow .group .entry span.message .boolean { color: #97004c; }
 #logWindow .group .entry span.message .number { color: #57bcd1; }
 #logWindow .group .entry span.message .missing { text-decoration: underline; font-weight: normal; }
+#logWindow .group .entry-trace span.message {color: #666666;}
+#logWindow .group .entry-debug span.message {color: #666666;}
+#logWindow .group .entry-info span.message {color: #7ca223;}
+#logWindow .group .entry-warning span.message {color: #fb660a;}
+#logWindow .group .entry-error span.message {color: crimson;}
+#logWindow .group .entry-alert span.message {color: crimson;}
+#logWindow .group .entry-critical span.message {color: crimson;}
+#logWindow .group .entry-emergency span.message {color: crimson;}
 
-#logWindow .group .entry .details { margin-left: 10px; border-left: 7px solid #222; padding: 0 5px 15px 5px; }
+#logWindow .group .entry .details { margin-left: 10px; border-left: 7px solid #222; padding: 0 5px 15px 5px; display: none; }
 #logWindow .group .entry .var-value { color: #a6e22e; }
 #logWindow .group .entry .var-value-sql {color: #887CAF; }
 #logWindow .group .entry .var-value-int {color: #66d9ef; }

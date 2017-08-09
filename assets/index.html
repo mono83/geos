@@ -1,26 +1,24 @@
 <html>
     <head>
-        <title>Eos Websocket client</title>
+        <title>Logstash RT (0.2-beta)</title>
         <link href='http://fonts.googleapis.com/css?family=Roboto&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
         <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700&subset=cyrillic-ext,cyrillic,latin' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="css/themes/holo.css">
         <link rel="stylesheet" href="css/terminal.css">
-        <script
-                data-main="js/app.js"
-                src="http://cdn.jsdelivr.net/requirejs/2.1.14/require.min.js"></script>
+        <script src="geosjs/entry.js"></script>
+        <script src="geosjs/group.js"></script>
+        <script src="geosjs/reactor.js"></script>
     </head>
     <body>
         <div id="connectWindow">
-            <input type="text" id="dsn" placeholder="DSN" />
-            <input type="text" id="tag" placeholder="Tag filter" />
-            <input type="text" id="realm" placeholder="Realm name" />
-            <input type="password" id="secret" placeholder="Realm secret" />
-            <hr />
-            <span class="logo">EOS websocket client</span>
-            <input type="button" id="connect" />
-            <input type="button" id="clearButton"/>
+            <span class="logo">Logstash RT client</span>
+            <input type="button" id="connectBtn" />
+            <input type="button" id="clearBtn"/>
         </div>
         <div id="tagWindow"></div>
         <div id="logWindow"></div>
     </body>
+    <script>
+        window.GEOS.init();
+    </script>
 </html>
