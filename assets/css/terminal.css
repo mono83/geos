@@ -29,6 +29,8 @@ Cyan: #66d9ef
 #logWindow .group .header .exposed > span {color: lime; display: inline-block; margin: 0 5px; padding: 2px 4px; border-radius: 5px; font-size: 13px; font-weight: bold;}
 #logWindow .group .content { margin: 0 0 10px .5em; border-left: .5em solid #fb660a; padding-left: .5em; }
 #logWindow .group .header .sharedTags { color: #66d9ef; }
+#logWindow .group .header .entries .msg { color: #57bcd1; }
+#logWindow .group .header .entries .err { color: #ff0086; }
 
 #logWindow .group .contentPanel > span { color: #fb660a; cursor: pointer; }
 #logWindow .group .contentPanel > span:hover { background-color: #fb660a; color: white; }

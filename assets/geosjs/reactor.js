@@ -105,7 +105,7 @@ Reactor.prototype.init = function init() {
     });
 
     this.connect();
-    // this.fixture();
+    this.fixture();
 };
 
 /**
@@ -135,6 +135,18 @@ Reactor.prototype.fixture = function fixture() {
         "log-level": "emergency",
         "message": "This is emergency message"
     }));
+
+    var self = this;
+    var index = 0;
+    window.setInterval(function() {
+        // Emitting event at regular basis
+        self.emit(new Entry({
+            "rayId": "render",
+            "app": "foo",
+            "log-level": "info",
+            "message": "Regular message #" + (index++)
+        }))
+    }, 500);
 };
 
 window.GEOS = new Reactor();
