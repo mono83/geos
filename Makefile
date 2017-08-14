@@ -12,6 +12,10 @@ clean: ## Clears environment
 	@rm -rf ./assets.go
 	@rm -rf release/*
 
+dev: deps ## Prepares dev-environment
+	@echo $(shell date +'%H:%M:%S') "\033[0;32mPreparing assets for development mode\033[0m"
+	@go-bindata -debug -pkg geos -o assets.go assets/...
+
 test: ## Runs unit tests
 	@echo $(shell date +'%H:%M:%S') "\033[0;32mRunning unit tests\033[0m"
 	@go test ./...
