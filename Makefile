@@ -24,6 +24,7 @@ deps: ## Download required dependencies
 	@echo $(shell date +'%H:%M:%S') "\033[0;32mDownloading dependencies\033[0m"
 	@go get github.com/jteeuwen/go-bindata/...
 	@go get github.com/gorilla/websocket/...
+	@go get github.com/spf13/cobra
 
 release: clean deps assets test ## Runs all release tasks
 	@echo $(shell date +'%H:%M:%S') "\033[0;32mCompiling Linux version\033[0m"
