@@ -105,7 +105,7 @@ Reactor.prototype.init = function init() {
     });
 
     this.connect();
-    this.fixture();
+    // this.fixture();
 };
 
 /**

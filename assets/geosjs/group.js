@@ -77,7 +77,9 @@ Group.prototype.getDom = function getDom() {
             '<span class="box time last">' + this.items[0].time.toISOString().slice(11, 19) + '</span>' +
             '<span class="application">' + Array.from(this.applicationName).join() + '</span>' +
             '<span class="title">' + this.rayId + '</span>' +
-            '<span class="box toggle entries"><span class="msg">' + this.count.msg + '</span>/<span class="err">' + this.count.err + '</span>/<span class="skip">' + this.count.skip + '</span></span>' +
+            '<span class="box toggle entries" title="Show logs in group"><span class="msg">' + this.count.msg + '</span>|<span class="err">' + this.count.err + '</span>|<span class="skip">' + this.count.skip + '</span></span>' +
+            '<span class="box toggle skipper" title="Ignore new messages">skip</span>' +
+            '<span class="box toggle clearer" title="Clear group">clear</span>' +
             '</div><div class="unfold"></div>';
 
         this.$ = $;
@@ -88,14 +90,29 @@ Group.prototype.getDom = function getDom() {
         this.$time = $.querySelector(".header > .last");
         this.$unfold = $.querySelector(".unfold");
 
+        var $skip = $.querySelector('.skipper');
+        $skip.addEventListener('click', function () {
+            if (this.skip) {
+                $skip.classList.remove('active');
+            } else {
+                $skip.classList.add('active');
+            }
+
+            this.skip = !this.skip;
+        }.bind(this));
+
+        $.querySelector('.clearer').addEventListener('click', this.clear.bind(this));
+
         this.$cntMsg.parentNode.addEventListener('click', function () {
             this.open = !this.open;
             if (this.open) {
+                this.$cntSkip.parentNode.classList.add('active');
                 // Current state - is open, rendering
                 this.items.forEach(function (entry) {
                     this.$unfold.appendChild(entry.getDom());
                 }, this);
             } else {
+                this.$cntSkip.parentNode.classList.remove('active');
                 // Current state - closed, removing rendered items
                 while (this.$unfold.hasChildNodes()) {
                     this.$unfold.removeChild(this.$unfold.firstChild);
@@ -107,7 +124,25 @@ Group.prototype.getDom = function getDom() {
     return this.$;
 };
 
+/**
+ * Clears group data
+ */
+Group.prototype.clear = function () {
+    this.items = [];
+    this.count = {msg: 0, err: 0, skip: 0};
+
+    if (this.$unfold) {
+        while (this.$unfold.hasChildNodes()) {
+            this.$unfold.removeChild(this.$unfold.firstChild);
+        }
+    }
+};
+
+/**
+ * Destroys group - data and DOM
+ */
 Group.prototype.destroy = function () {
+    this.clear();
     if (this.$) {
         this.$.remove();
     }

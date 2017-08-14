@@ -12,7 +12,7 @@ Cyan: #66d9ef
 #tagWindow div.enabled {background-color: #fb660a; color: black;}
 #tagWindow div:hover {color: white;}
 
-#logWindow {font: normal 15px "Ubuntu Mono", monospace; margin-right: 210px;}
+#logWindow {font: normal 15px "Ubuntu Mono" }
 #logWindow .group .header {padding: 0 5px; }
 #logWindow .group .header:hover { background-color: rgba(255, 255, 255, 0.1); }
 #logWindow .group .header > .title {font-weight: bold; color: white; display: inline-block; margin-right: 0.5em;}
@@ -31,6 +31,9 @@ Cyan: #66d9ef
 #logWindow .group .header .sharedTags { color: #66d9ef; }
 #logWindow .group .header .entries .msg { color: #57bcd1; }
 #logWindow .group .header .entries .err { color: #ff0086; }
+#logWindow .group .header .active { background-color: #a6e22e; color: black; }
+#logWindow .group .header .active .msg { color: black; }
+#logWindow .group .header .active .err { color: black; }
 
 #logWindow .group .contentPanel > span { color: #fb660a; cursor: pointer; }
 #logWindow .group .contentPanel > span:hover { background-color: #fb660a; color: white; }
