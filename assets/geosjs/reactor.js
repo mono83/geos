@@ -4,6 +4,8 @@ function Reactor() {
     this._reserved = "geos";
     this._socket = null;
     this._groups = {};
+    this.initialTitle = null;
+    this.total = 0;
     this.$logs = null;
     this.$buttonConnect = null;
     this.$buttonClear = null;
@@ -14,12 +16,15 @@ function Reactor() {
  */
 Reactor.prototype.emit = function emit(pkt) {
     var name = pkt.getRayId();
+    this.total++;
     if (!this._groups.hasOwnProperty(name)) {
         this._groups[name] = new Group(pkt);
         this.$logs.appendChild(this._groups[name].getDom());
     } else {
         this._groups[name].add(pkt);
     }
+
+    window.document.title = '[' + this.total + '] ' + this.initialTitle;
 };
 
 /**
@@ -72,6 +77,8 @@ Reactor.prototype.connect = function connect() {
  * Initializes reactor (god object)
  */
 Reactor.prototype.init = function init() {
+    this.initialTitle = window.document.title;
+
     this.$logs = document.getElementById('logWindow');
     this.$buttonConnect = document.getElementById('connectBtn');
     this.$buttonClear = document.getElementById('clearBtn');

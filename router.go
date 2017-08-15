@@ -46,6 +46,7 @@ func (r *Router) Register(receiver Receiver) {
 	}
 }
 
+// HandleBytes converts incoming byte slice into Packet and sends it to all consumers
 func (r *Router) HandleBytes(bts []byte) {
 	if len(bts) > 0 {
 		//fmt.Println(string(bts))

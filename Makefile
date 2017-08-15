@@ -15,6 +15,8 @@ clean: ## Clears environment
 dev: deps ## Prepares dev-environment
 	@echo $(shell date +'%H:%M:%S') "\033[0;32mPreparing assets for development mode\033[0m"
 	@go-bindata -debug -pkg geos -o assets.go assets/...
+	@echo $(shell date +'%H:%M:%S') "\033[0;32mStarting application on dev settings\033[0m"
+	@go run main/geos.go :5001 :8085
 
 test: ## Runs unit tests
 	@echo $(shell date +'%H:%M:%S') "\033[0;32mRunning unit tests\033[0m"

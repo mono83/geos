@@ -10,6 +10,7 @@ import (
 	"net/http"
 )
 
+// GeosCmd is main GEOS command-line command
 var GeosCmd = &cobra.Command{
 	Use:   "geos udpBind httpBind",
 	Short: "Starts UDP listener, that forwards data to websocket frontend",
