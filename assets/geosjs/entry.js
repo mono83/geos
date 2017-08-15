@@ -23,13 +23,13 @@ function Entry(data) {
  * @returns {string|*|string} RayID of log entry
  */
 Entry.prototype.getRayId = function getRayId() {
-    return this.data.rayId || "--none--";
+    return this.data.rayId || this.data["sessionId"] || this.data["session-id"] || "--none--";
 };
 /**
  * @returns {string|*|string} Application name for entry
  */
 Entry.prototype.getApplicationName = function getApplicationName() {
-    return this.data.app || ""
+    return this.data.app || this.data.serviceName || ""
 };
 Entry.prototype.getLevel = function getLevel() {
     var lvl = (this.data["log-level"] || this.data.level || "info").toLowerCase();
@@ -44,7 +44,7 @@ Entry.prototype.isError = function isError() {
     return lvl === "error" || lvl === "alert" || lvl === "critical" || lvl === "emergency";
 };
 Entry.prototype.getMessage = function getMessage() {
-    return this.data.message || this.data.pattern || "--none--";
+    return this.data.hmessage || this.data.message || this.data.pattern || "--none--";
 };
 Entry.prototype.getDom = function getDom() {
     if (this.$ === null) {

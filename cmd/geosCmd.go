@@ -12,11 +12,11 @@ import (
 
 // GeosCmd is main GEOS command-line command
 var GeosCmd = &cobra.Command{
-	Use:   "geos udpBind httpBind",
+	Use:   "geos [udpHost]:udpPort [httpHost]:httpPort",
 	Short: "Starts UDP listener, that forwards data to websocket frontend",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 2 {
-			return errors.New("Both bindings must be supplied")
+			return errors.New("Both bindings must be supplied, example: ./geos :5001 :8085")
 		}
 
 		// Configure
