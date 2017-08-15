@@ -29,7 +29,7 @@ Entry.prototype.getRayId = function getRayId() {
  * @returns {string|*|string} Application name for entry
  */
 Entry.prototype.getApplicationName = function getApplicationName() {
-    return this.data.app || "--none--"
+    return this.data.app || ""
 };
 Entry.prototype.getLevel = function getLevel() {
     var lvl = (this.data["log-level"] || this.data.level || "info").toLowerCase();

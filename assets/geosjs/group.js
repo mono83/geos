@@ -58,9 +58,11 @@ Group.prototype.add = function add(entry) {
 
     // Updating application
     var before = this.applicationName.size;
-    this.applicationName.add(entry.getApplicationName());
-    if (this.applicationName.size !== before && this.$app) {
-        this.$app.innerText = Array.from(this.applicationName).join();
+    if (entry.getApplicationName()) {
+        this.applicationName.add(entry.getApplicationName());
+        if (this.applicationName.size !== before && this.$app) {
+            this.$app.innerText = Array.from(this.applicationName).join();
+        }
     }
 };
 
@@ -136,6 +138,8 @@ Group.prototype.clear = function () {
             this.$unfold.removeChild(this.$unfold.firstChild);
         }
     }
+
+    this.add(new Entry({message: "Group cleared"}));
 };
 
 /**
