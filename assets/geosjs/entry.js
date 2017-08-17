@@ -26,6 +26,31 @@ Entry.prototype.getRayId = function getRayId() {
     return this.data.rayId || this.data["sessionId"] || this.data["session-id"] || "--none--";
 };
 /**
+ * @returns {string} Name of object, that emits this event
+ */
+Entry.prototype.getLogger = function getLogger() {
+    return this.data.object || "--none--";
+};
+/**
+ * @returns {string} Short name of object, that emits this event
+ */
+Entry.prototype.getLoggerShort = function getLoggerShort() {
+    var logger = this.getLogger();
+    if (logger.indexOf('\\') !== -1) {
+        logger = logger.replace(/\\+/g, '.')
+    }
+    if (logger.indexOf('.') !== -1) {
+        var chunks = logger.split('.');
+        logger = chunks.map(function (o, i) {
+            return i === chunks.length - 1
+                ? o
+                : o[0].toLowerCase();
+        }).join('.');
+    }
+
+    return logger;
+};
+/**
  * @returns {string|*|string} Application name for entry
  */
 Entry.prototype.getApplicationName = function getApplicationName() {

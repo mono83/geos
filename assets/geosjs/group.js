@@ -16,6 +16,7 @@ function Group(entry) {
     this.count = {msg: 0, err: 0, skip: 0};
     this.items = [];
     this.open = false; // Open or folded mode
+    this.uml = false; // Open or closed UML
     this.skip = false; // Skip appending
     this.$ = null;
     this.$app = null;
@@ -24,6 +25,7 @@ function Group(entry) {
     this.$cntSkip = null;
     this.$time = null;
     this.$unfold = null;
+    this.$uml = null;
 
     this.add(entry)
 }
@@ -80,9 +82,10 @@ Group.prototype.getDom = function getDom() {
             '<span class="app">' + Array.from(this.applicationName).join() + '</span>' +
             '<span class="title">' + this.rayId + '</span>' +
             '<span class="box toggle entries" title="Show logs in group"><span class="msg">' + this.count.msg + '</span>|<span class="err">' + this.count.err + '</span>|<span class="skip">' + this.count.skip + '</span></span>' +
+            '<span class="box toggle uml" title="Show UML sequence">uml</span>' +
             '<span class="box toggle skipper" title="Ignore new messages">skip</span>' +
             '<span class="box toggle clearer" title="Clear group">clear</span>' +
-            '</div><div class="unfold"></div>';
+            '</div><div class="unfold"></div><div class="uml"></div>';
 
         this.$ = $;
         this.$cntMsg = $.querySelector(".entries > .msg");
@@ -91,6 +94,7 @@ Group.prototype.getDom = function getDom() {
         this.$app = $.querySelector(".header > .app");
         this.$time = $.querySelector(".header > .last");
         this.$unfold = $.querySelector(".unfold");
+        this.$uml = $.querySelector("div.uml");
 
         var $skip = $.querySelector('.skipper');
         $skip.addEventListener('click', function () {
@@ -118,6 +122,23 @@ Group.prototype.getDom = function getDom() {
                 // Current state - closed, removing rendered items
                 while (this.$unfold.hasChildNodes()) {
                     this.$unfold.removeChild(this.$unfold.firstChild);
+                }
+            }
+        }.bind(this));
+
+        $.querySelector(".header .uml").addEventListener('click', function () {
+            this.uml = !this.uml;
+            if (this.uml) {
+                this.$.querySelector(".header .uml").classList.add('active');
+                this.generateLoggerSequenceUML().forEach(function (o) {
+                    var $ = document.createElement('div');
+                    $.innerText = o;
+                    this.$uml.appendChild($);
+                }.bind(this));
+            } else {
+                this.$.querySelector(".header .uml").classList.remove('active');
+                while (this.$uml.hasChildNodes()) {
+                    this.$uml.removeChild(this.$uml.firstChild);
                 }
             }
         }.bind(this));
@@ -150,4 +171,33 @@ Group.prototype.destroy = function () {
     if (this.$) {
         this.$.remove();
     }
+};
+
+/**
+ * Generates sequence diagram UML
+ */
+Group.prototype.generateLoggerSequenceUML = function generateLoggerSequenceUML() {
+    var previous = null;
+    var list = [
+        'Title: Sequence diagram '
+    ];
+    this.items.forEach(function (o) {
+        var current = o.getLoggerShort();
+        if (current !== previous) {
+            if (previous) {
+                if (list[list.length-1] === current + '->' + previous + ':') {
+                    list[list.length-1] = current + '<->' + previous + ':';
+                } else {
+                    list.push(previous + '->' + current + ':');
+                }
+            }
+            previous = current;
+        }
+    });
+
+    if (list.length === 1) {
+        list.push('# No multiple loggers found')
+    }
+
+    return list;
 };
