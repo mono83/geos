@@ -77,7 +77,7 @@ Group.prototype.getDom = function getDom() {
         $.innerHTML = '<div class="header">' +
             '<span class="box time first">' + this.items[0].time.toISOString().slice(11, 19) + '</span>' +
             '<span class="box time last">' + this.items[0].time.toISOString().slice(11, 19) + '</span>' +
-            '<span class="application">' + Array.from(this.applicationName).join() + '</span>' +
+            '<span class="app">' + Array.from(this.applicationName).join() + '</span>' +
             '<span class="title">' + this.rayId + '</span>' +
             '<span class="box toggle entries" title="Show logs in group"><span class="msg">' + this.count.msg + '</span>|<span class="err">' + this.count.err + '</span>|<span class="skip">' + this.count.skip + '</span></span>' +
             '<span class="box toggle skipper" title="Ignore new messages">skip</span>' +
@@ -88,7 +88,7 @@ Group.prototype.getDom = function getDom() {
         this.$cntMsg = $.querySelector(".entries > .msg");
         this.$cntErr = $.querySelector(".entries > .err");
         this.$cntSkip = $.querySelector(".entries > .skip");
-        this.$app = $.querySelector(".header > .application");
+        this.$app = $.querySelector(".header > .app");
         this.$time = $.querySelector(".header > .last");
         this.$unfold = $.querySelector(".unfold");
 

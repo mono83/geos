@@ -16,7 +16,7 @@ Cyan: #66d9ef
 #logWindow .group .header {padding: 0 5px; }
 #logWindow .group .header:hover { background-color: rgba(255, 255, 255, 0.1); }
 #logWindow .group .header > .title {font-weight: bold; color: white; display: inline-block; margin-right: 0.5em;}
-#logWindow .group .header > .application {font-weight: bold; color: #7ca223; display: inline-block; margin-right: 0.5em;}
+#logWindow .group .header > .app {font-weight: bold; color: #57bcd1; display: inline-block; margin-right: 0.5em;}
 #logWindow .group .header > .time { font-weight: bold; color: #ff0086; }
 #logWindow .group .header:hover > .time { color: #ff0086; }
 #logWindow .box { display: inline-block; margin-right: .5em; }
@@ -40,13 +40,11 @@ Cyan: #66d9ef
 
 #logWindow .group .entry {margin-left: 5px; white-space: nowrap;}
 #logWindow .group .entry span.index { color: #999999; }
-#logWindow .group .entry span.exception { color: #E00; }
-#logWindow .group .entry span.exception::before { content: " [";}
-#logWindow .group .entry span.exception::after { content: "] ";}
 #logWindow .group .entry span.time { color: #999999; font-weight: bold; cursor: pointer;}
 #logWindow .group .entry:hover span.time { color: #ff0086; }
 #logWindow .group .entry span.time::before { content: " ["; color: #AAA;}
 #logWindow .group .entry span.time::after { content: "] "; color: #AAA;}
+#logWindow .group .entry span.app { color: #57bcd1; font-weight: bold; padding-right: 0.5em; }
 #logWindow .group .entry span.message { color: #AAA; font-weight: bold; }
 #logWindow .group .entry span.message .string { color: #7ca223; }
 #logWindow .group .entry span.message .boolean { color: #97004c; }
@@ -72,7 +70,13 @@ Cyan: #66d9ef
 #logWindow .group .entry .var-name-internal {color: #ff0086;}
 #logWindow .group .entry .var-name-internal::before { content: " ["; color: #AAA; }
 #logWindow .group .entry .var-name-internal::after { content: "] "; color: #AAA; }
-#logWindow .group .entry .var-value-exception { color: #E00; }
-#logWindow .group .entry .var-trace-line { color: #66d9ef; font-weight: bold; }
-#logWindow .group .entry .var-trace-line::after { content: "  @ file "; color: #AAA; }
-#logWindow .group .entry .var-trace-file { color: white; font-weight: bold; }
+#logWindow .group .entry .exception {margin-top: 1em;}
+#logWindow .group .entry .exception .header {color: #fb660a}
+#logWindow .group .entry .exception .code {color: #57bcd1; margin: 0 1em;}
+#logWindow .group .entry .exception .code::before { content: "[Code:"; color: #666666;}
+#logWindow .group .entry .exception .code::after { content: "]"; color: #666666;}
+#logWindow .group .entry .exception .message {color: crimson;}
+#logWindow .group .entry .exception .trace {margin-left: 1em; font-weight: normal;}
+#logWindow .group .entry .exception .trace .line { color: #57bcd1; }
+#logWindow .group .entry .exception .trace .line:before { content: " line "; color: #666666; }
+#logWindow .group .entry .exception .trace .file:before { content: " file "; color: #666666; }

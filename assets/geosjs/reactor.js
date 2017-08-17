@@ -140,7 +140,15 @@ Reactor.prototype.fixture = function fixture() {
         "rayId": "render",
         "app": "foo",
         "log-level": "emergency",
-        "message": "This is emergency message"
+        "message": "This is emergency message",
+        "exception": {
+            "code": 12,
+            "message": "Some kind of exception message",
+            "trace": [
+                {file: "action.php", line: 300},
+                {file: "index.php", line: 4}
+            ]
+        }
     }));
 
     var self = this;
