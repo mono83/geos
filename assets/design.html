@@ -1,0 +1,90 @@
+<html>
+<head>
+    <title>Logstash RT (0.3.4-beta)</title>
+    <link rel="stylesheet" href="css/terminal.css">
+    <script src="geosjs/entry.js"></script>
+    <script src="geosjs/group.js"></script>
+    <script src="geosjs/reactor.js"></script>
+</head>
+<body>
+<div id="connectWindow">
+    <span class="logo">Logstash RT client</span>
+    <input type="button" id="connectBtn"/>
+    <input type="button" id="clearBtn"/>
+</div>
+<div id="logWindow">
+    <div index="2" class="group">
+        <div class="header"><span class="box time first">05:25:01</span><span class="box time last">05:25:33</span><span
+                class="app">geos,test,foo</span><span class="title">render</span><span class="box toggle entries"
+                                                                                       title="Show logs in group"><span
+                class="msg">20</span>|<span class="err">4</span>|<span class="skip">53</span></span><span
+                class="box toggle uml" title="Show UML sequence">uml</span><span class="box toggle skipper active"
+                                                                                 title="Ignore new messages">skip</span><span
+                class="box toggle clearer" title="Clear group">clear</span></div>
+        <div class="unfold">
+            <div index="2" class="entry entry-trace">
+                <div class="line"><span class="time">05:25:01</span><span class="app">geos</span><span class="message">This is trace message</span>
+                </div>
+                <div class="details unfold" style="display: block;">
+                    <div><span class="var-name">rayId</span><span class="var-value">render</span></div>
+                    <div><span class="var-name">app</span><span class="var-value">geos</span></div>
+                    <div><span class="var-name">log-level</span><span class="var-value">trace</span></div>
+                    <div><span class="var-name">message</span><span class="var-value">This is trace message</span></div>
+                </div>
+            </div>
+            <div index="3" class="entry entry-debug">
+                <div class="line"><span class="time">05:25:01</span><span class="app">geos</span><span class="message">This is debug message</span>
+                </div>
+                <div class="details unfold"></div>
+            </div>
+            <div index="4" class="entry entry-info">
+                <div class="line"><span class="time">05:25:01</span><span class="app">geos</span><span class="message">This is info message</span>
+                </div>
+                <div class="details unfold"></div>
+            </div>
+            <div index="5" class="entry entry-warning">
+                <div class="line"><span class="time">05:25:01</span><span class="app">geos</span><span class="message">This is warning message</span>
+                </div>
+                <div class="details unfold"></div>
+            </div>
+            <div index="6" class="entry entry-error">
+                <div class="line"><span class="time">05:25:01</span><span class="app">geos</span><span class="message">This is error message с русским текстом</span>
+                </div>
+                <div class="details unfold"></div>
+            </div>
+            <div index="7" class="entry entry-alert">
+                <div class="line"><span class="time">05:25:01</span><span class="app">test</span><span class="message">This is alert message</span>
+                </div>
+                <div class="details unfold"></div>
+            </div>
+            <div index="8" class="entry entry-critical">
+                <div class="line"><span class="time">05:25:01</span><span class="app">geos</span><span class="message">This is critical message</span>
+                </div>
+                <div class="details unfold" style="display: none;"></div>
+            </div>
+            <div index="9" class="entry entry-emergency">
+                <div class="line"><span class="time">05:25:01</span><span class="app">foo</span><span class="message">This is emergency message</span>
+                </div>
+                <div class="details unfold" style="display: block;">
+                    <div><span class="var-name">rayId</span><span class="var-value">render</span></div>
+                    <div><span class="var-name">app</span><span class="var-value">foo</span></div>
+                    <div><span class="var-name">log-level</span><span class="var-value">emergency</span></div>
+                    <div><span class="var-name">message</span><span class="var-value">This is emergency message</span>
+                    </div>
+                    <div class="exception">
+                        <div class="header">Exception data</div>
+                        <div><span class="code">12</span><span class="message">Some kind of exception message</span>
+                        </div>
+                        <div class="trace">
+                            <div><span class="file">action.php</span><span class="line">300</span></div>
+                            <div><span class="file">index.php</span><span class="line">4</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="uml"></div>
+    </div>
+</div>
+</body>
+</html>

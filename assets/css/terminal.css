@@ -7,17 +7,19 @@ Lime: #a6e22e
 Cyan: #66d9ef
 */
 
-#tagWindow {float: right; width: 200px; font: bold 15px "Ubuntu Mono", monospace;}
-#tagWindow div {color: #ff0086; cursor: pointer; display: inline-block; margin: 3px;}
-#tagWindow div.enabled {background-color: #fb660a; color: black;}
-#tagWindow div:hover {color: white;}
+@font-face {
+    font-family: LoadedFont;
+    src: url("../fonts/UbuntuMono-R.ttf") format("truetype");
+}
 
-#logWindow {font: normal 15px "Ubuntu Mono" }
+body {margin: 0; padding: 0; background-color: black; color: white;}
+
+#logWindow {font: normal 15px "LoadedFont" }
 #logWindow .group .header {padding: 0 5px; }
 #logWindow .group .header:hover { background-color: rgba(255, 255, 255, 0.1); }
-#logWindow .group .header > .title {font-weight: bold; color: white; display: inline-block; margin-right: 0.5em;}
-#logWindow .group .header > .app {font-weight: bold; color: #57bcd1; display: inline-block; margin-right: 0.5em;}
-#logWindow .group .header > .time { font-weight: bold; color: #ff0086; }
+#logWindow .group .header > .title {color: white; display: inline-block; margin-right: 0.5em;}
+#logWindow .group .header > .app {color: #57bcd1; display: inline-block; margin-right: 0.5em;}
+#logWindow .group .header > .time {color: #ff0086; }
 #logWindow .group .header:hover > .time { color: #ff0086; }
 #logWindow .box { display: inline-block; margin-right: .5em; }
 #logWindow .box::before { content: "["; }
@@ -26,7 +28,7 @@ Cyan: #66d9ef
 #logWindow .group .header > .toggle > .count { color: #66d9ef; }
 #logWindow .group .header > .toggle:hover { background-color: #fb660a; color: white; }
 #logWindow .group .header > .toggle:hover > .count { color: white; }
-#logWindow .group .header .exposed > span {color: lime; display: inline-block; margin: 0 5px; padding: 2px 4px; border-radius: 5px; font-size: 13px; font-weight: bold;}
+#logWindow .group .header .exposed > span {color: lime; display: inline-block; margin: 0 5px; padding: 2px 4px; border-radius: 5px; font-size: 13px; }
 #logWindow .group .content { margin: 0 0 10px .5em; border-left: .5em solid #fb660a; padding-left: .5em; }
 #logWindow .group .header .sharedTags { color: #66d9ef; }
 #logWindow .group .header .entries .msg { color: #57bcd1; }
@@ -40,12 +42,12 @@ Cyan: #66d9ef
 
 #logWindow .group .entry {margin-left: 5px; white-space: nowrap;}
 #logWindow .group .entry span.index { color: #999999; }
-#logWindow .group .entry span.time { color: #999999; font-weight: bold; cursor: pointer;}
+#logWindow .group .entry span.time { color: #999999; cursor: pointer;}
 #logWindow .group .entry:hover span.time { color: #ff0086; }
 #logWindow .group .entry span.time::before { content: " ["; color: #AAA;}
 #logWindow .group .entry span.time::after { content: "] "; color: #AAA;}
-#logWindow .group .entry span.app { color: #57bcd1; font-weight: bold; padding-right: 0.5em; }
-#logWindow .group .entry span.message { color: #AAA; font-weight: bold; }
+#logWindow .group .entry span.app { color: #57bcd1; padding-right: 0.5em; }
+#logWindow .group .entry span.message { color: #AAA; }
 #logWindow .group .entry span.message .string { color: #7ca223; }
 #logWindow .group .entry span.message .boolean { color: #97004c; }
 #logWindow .group .entry span.message .number { color: #57bcd1; }
