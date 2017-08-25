@@ -4,3 +4,4 @@
 
 *.iml
 assets.go
+.DS_Store
