@@ -26,6 +26,7 @@ function Group(entry) {
     this.$time = null;
     this.$unfold = null;
     this.$uml = null;
+    this.$tail = null;
 
     this.add(entry)
 }
@@ -54,8 +55,11 @@ Group.prototype.add = function add(entry) {
     if (this.$time) {
         this.$time.innerText = entry.time.toISOString().slice(11, 19);
     }
+    if (this.$tail) {
+        this.$tail.innerText = entry.getMessage();
+    }
     if (this.$ && this.open && !this.skip) {
-        this.$unfold.appendChild(entry.getDom())
+        this.$unfold.appendChild(entry.getDom());
     }
 
     // Updating application
@@ -63,7 +67,7 @@ Group.prototype.add = function add(entry) {
     if (entry.getApplicationName()) {
         this.applicationName.add(entry.getApplicationName());
         if (this.applicationName.size !== before && this.$app) {
-            this.$app.innerText = Array.from(this.applicationName).join();
+            this.$app.innerText = Array.from(this.applicationName).join(',');
         }
     }
 };
@@ -77,14 +81,12 @@ Group.prototype.getDom = function getDom() {
         $.setAttribute('index', this.index);
         $.classList.add("group");
         $.innerHTML = '<div class="header">' +
-            '<span class="box time first">' + this.items[0].time.toISOString().slice(11, 19) + '</span>' +
-            '<span class="box time last">' + this.items[0].time.toISOString().slice(11, 19) + '</span>' +
-            '<span class="app">' + Array.from(this.applicationName).join() + '</span>' +
+            '<span class="time last">' + this.items[0].time.toISOString().slice(11, 19) + '</span>' +
+            '<span class="commands"><i class="fa fa-ban skipper" aria-hidden="true" title="Ignore group"></i><i class="fa fa-eraser clearer" aria-hidden="true" title="Erase messages"></i><i class="fa fa-exchange uml" aria-hidden="true" title="Render UML"></i></span>' +
+            '<span class="entries" title="Show logs in group"><span class="msg">' + this.count.msg + '</span>|<span class="err">' + this.count.err + '</span>|<span class="skip">' + this.count.skip + '</span></span>' +
             '<span class="title">' + this.rayId + '</span>' +
-            '<span class="box toggle entries" title="Show logs in group"><span class="msg">' + this.count.msg + '</span>|<span class="err">' + this.count.err + '</span>|<span class="skip">' + this.count.skip + '</span></span>' +
-            '<span class="box toggle uml" title="Show UML sequence">uml</span>' +
-            '<span class="box toggle skipper" title="Ignore new messages">skip</span>' +
-            '<span class="box toggle clearer" title="Clear group">clear</span>' +
+            '<span class="app">' + Array.from(this.applicationName).join() + '</span>' +
+            '<span class="tail">' + this.items[0].getMessage() + '</span>' +
             '</div><div class="unfold"></div><div class="uml"></div>';
 
         this.$ = $;
@@ -95,8 +97,9 @@ Group.prototype.getDom = function getDom() {
         this.$time = $.querySelector(".header > .last");
         this.$unfold = $.querySelector(".unfold");
         this.$uml = $.querySelector("div.uml");
+        this.$tail = $.querySelector(".header > .tail");
 
-        var $skip = $.querySelector('.skipper');
+        var $skip = $.querySelector('.commands .skipper');
         $skip.addEventListener('click', function () {
             if (this.skip) {
                 $skip.classList.remove('active');
@@ -107,18 +110,19 @@ Group.prototype.getDom = function getDom() {
             this.skip = !this.skip;
         }.bind(this));
 
-        $.querySelector('.clearer').addEventListener('click', this.clear.bind(this));
+        $.querySelector('.commands .clearer').addEventListener('click', this.clear.bind(this));
 
-        this.$cntMsg.parentNode.addEventListener('click', function () {
+        var $time = $.querySelector('.time');
+        $time.addEventListener('click', function () {
             this.open = !this.open;
             if (this.open) {
-                this.$cntSkip.parentNode.classList.add('active');
+                $time.parentNode.parentNode.classList.add('selected');
                 // Current state - is open, rendering
                 this.items.forEach(function (entry) {
                     this.$unfold.appendChild(entry.getDom());
                 }, this);
             } else {
-                this.$cntSkip.parentNode.classList.remove('active');
+                $time.parentNode.parentNode.classList.remove('selected');
                 // Current state - closed, removing rendered items
                 while (this.$unfold.hasChildNodes()) {
                     this.$unfold.removeChild(this.$unfold.firstChild);
@@ -126,17 +130,17 @@ Group.prototype.getDom = function getDom() {
             }
         }.bind(this));
 
-        $.querySelector(".header .uml").addEventListener('click', function () {
+        $.querySelector(".commands .uml").addEventListener('click', function () {
             this.uml = !this.uml;
             if (this.uml) {
-                this.$.querySelector(".header .uml").classList.add('active');
+                this.$.querySelector(".commands .uml").classList.add('active');
                 this.generateLoggerSequenceUML().forEach(function (o) {
                     var $ = document.createElement('div');
                     $.innerText = o;
                     this.$uml.appendChild($);
                 }.bind(this));
             } else {
-                this.$.querySelector(".header .uml").classList.remove('active');
+                this.$.querySelector(".commands .uml").classList.remove('active');
                 while (this.$uml.hasChildNodes()) {
                     this.$uml.removeChild(this.$uml.firstChild);
                 }

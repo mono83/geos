@@ -55,7 +55,8 @@ Reactor.prototype.connect = function connect() {
     var socket = new WebSocket(uri);
     var self = this;
     socket.onopen = function onopen() {
-        self.$buttonConnect.value = "Disconnect";
+        self.$buttonConnect.classList.remove('inactive');
+        self.$buttonConnect.classList.add('active');
         self.debug("Connection to backend established");
         self._socket = socket;
     };
@@ -64,7 +65,8 @@ Reactor.prototype.connect = function connect() {
         socket.close();
     };
     socket.onclose = function onclose() {
-        self.$buttonConnect.value = "Connect";
+        self.$buttonConnect.classList.remove('active');
+        self.$buttonConnect.classList.add('inactive');
         self.debug("Connection closed");
         self._socket = null;
     };
@@ -75,22 +77,21 @@ Reactor.prototype.connect = function connect() {
 
 /**
  * Initializes reactor (god object)
+ * @param {boolean} debugMode
  */
-Reactor.prototype.init = function init() {
+Reactor.prototype.init = function init(debugMode) {
     this.initialTitle = window.document.title;
 
     this.$logs = document.getElementById('logWindow');
     this.$buttonConnect = document.getElementById('connectBtn');
     this.$buttonClear = document.getElementById('clearBtn');
 
-    this.$buttonClear.value = "Clear";
-    this.$buttonConnect.value = "Connect";
-
     var self = this;
     this.$buttonConnect.addEventListener('click', function () {
         if (self._socket !== null) {
             self.debug("Manual disconnect requested");
-            self.$buttonConnect.value = "Connect";
+            self.$buttonConnect.classList.remove('active');
+            self.$buttonConnect.classList.add('inactive');
             self._socket.close();
             self._socket = null;
         } else {
@@ -112,7 +113,15 @@ Reactor.prototype.init = function init() {
     });
 
     this.connect();
-    // this.fixture();
+    if (debugMode) {
+        this.fixture();
+        window.setTimeout(function() {
+            var $ = document.querySelector('div.group[index="2"]');
+            $.querySelector('.time').click();
+            $.querySelector('.unfold .entry[index="4"] .time').click();
+            $.querySelector('.unfold .entry[index="9"] .time').click();
+        }, 100);
+    }
 };
 
 /**
@@ -153,6 +162,7 @@ Reactor.prototype.fixture = function fixture() {
 
     var self = this;
     var index = 0;
+    return;
     window.setInterval(function() {
         // Emitting event at regular basis
         self.emit(new Entry({

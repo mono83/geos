@@ -3,22 +3,21 @@
         <title>Logstash RT (0.3.4-beta)</title>
         <link href='http://fonts.googleapis.com/css?family=Roboto&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
         <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700&subset=cyrillic-ext,cyrillic,latin' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="css/themes/holo.css">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
         <link rel="stylesheet" href="css/terminal.css">
         <script src="geosjs/entry.js"></script>
         <script src="geosjs/group.js"></script>
         <script src="geosjs/reactor.js"></script>
     </head>
     <body>
-        <div id="connectWindow">
-            <span class="logo">Logstash RT client</span>
-            <input type="button" id="connectBtn" />
-            <input type="button" id="clearBtn"/>
-        </div>
-        <div id="tagWindow"></div>
-        <div id="logWindow"></div>
+    <div id="topFrame">
+        <span class="logo">Logstash RT client</span>
+        <i id="connectBtn" class="fa fa-link faBtn inactive" aria-hidden="true" title="Connect/Disconnect"></i>
+        <i id="clearBtn" class="fa fa-eraser faBtn" aria-hidden="true" title="Clear"></i>
+    </div>
+    <div id="logWindow"></div>
     </body>
     <script>
-        window.GEOS.init();
+        window.GEOS.init(false);
     </script>
 </html>
