@@ -90,9 +90,9 @@ Entry.prototype.getDom = function getDom() {
         $.classList.add("entry");
         $.classList.add("entry-" + this.getLevel());
         $.innerHTML = '<div class="line">' +
-            '<span class="time">' + this.time.toISOString().slice(11, 19) + '</span>' +
-            '<span class="app">' + this.getApplicationName() + '</span>' +
+            '<span class="time">' + this.time.toISOString().slice(14, 19) + '</span>' +
             '<span class="message">' + this.getMessage() + '</span>' +
+            '<span class="app">' + this.getApplicationName() + '</span>' +
             '</div><div class="details unfold"></div>';
 
 
@@ -128,6 +128,10 @@ Entry.prototype.getDom = function getDom() {
                 var html = '';
                 Object.keys(cloned).forEach(function (name) {
                     var value = cloned[name];
+                    if (Array.isArray(value) && value.length === 1) {
+                        value = value[0];
+                    }
+
                     if (Array.isArray(value)) {
                         html += '<div><span class="var-name">' + name + '</span><br/>';
                         value.forEach(function (v) {
