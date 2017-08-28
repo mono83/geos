@@ -20,7 +20,7 @@ body {margin: 0; padding: 0; background-color: black; color: white;}
 #topFrame .faBtn.active { background-color: #a6e22e; }
 #topFrame .faBtn.inactive { background-color: #666666; }
 
-#topFrame .logo { color: #027b09; font-size: 33px; line-height: 15px; vertical-align: bottom; margin-right: 15px; }
+#topFrame .logo { color: #027b09; font-size: 33px; line-height: 15px; vertical-align: bottom; margin-right: 15px; font-family: sans-serif; }
 
 #logWindow {font: normal 11pt "LoadedFont" }
 #logWindow .group {padding: 1px;}
@@ -29,7 +29,7 @@ body {margin: 0; padding: 0; background-color: black; color: white;}
 #logWindow .group .header:hover { background-color: rgba(255, 255, 255, 0.2); }
 #logWindow .group .header .commands i { display: inline-block; margin: 0 0 0 0.5em; cursor: pointer; color: #1d5682; }
 #logWindow .group .header .commands i:hover { color: #fb660a; }
-#logWindow .group .header > .title {color: #027b09; display: inline-block; margin: 0 0.5em;}
+#logWindow .group .header > .title {color: #04a50d; display: inline-block; margin: 0 0.5em;}
 #logWindow .group .header > .app {color: #1d8255; display: inline-block; margin-right: 0.5em;}
 #logWindow .group .header > .app:before {content: '@'; color: #169a5f;}
 #logWindow .group .header > .time {color: #666666; cursor: pointer; }
@@ -43,13 +43,13 @@ body {margin: 0; padding: 0; background-color: black; color: white;}
 #logWindow .group .header .sharedTags { color: #66d9ef; }
 #logWindow .group .header .entries { color: #666666; margin-left: 0.5em; }
 #logWindow .group .header .commands .active { color: white; }
-#logWindow .group .header .tail { color: #2b312b; }
+#logWindow .group .header .tail { color: #455d45; }
 
 #logWindow .group .entry {margin-left: 1.5em; padding-left: 5px; white-space: nowrap;}
 #logWindow .group .entry span.index { color: #999999; }
 #logWindow .group .entry span.time { color: #666666; cursor: pointer; margin-right: 0.5em; }
 #logWindow .group .entry:hover span.time { color: #66d9ef; }
-#logWindow .group .entry span.app { color: #2b312b; display: inline-block; margin-left: 0.5em; }
+#logWindow .group .entry span.app { color: #455d45; display: inline-block; margin-left: 0.5em; }
 #logWindow .group .entry span.app:before { content: '@'; color: #3b4e3b; }
 #logWindow .group .entry span.message { color: #AAA; }
 #logWindow .group .entry span.message .string { color: #7ca223; }
@@ -66,20 +66,17 @@ body {margin: 0; padding: 0; background-color: black; color: white;}
 #logWindow .group .entry-emergency span.message {color: crimson;}
 
 #logWindow .group .entry .details { margin-left: 3em; padding: 0 5px 15px 0; display: none; }
+#logWindow .group .entry .details > div.table > div {display: table-row;}
+#logWindow .group .entry .details > div.table > div > span {display: table-cell;}
 #logWindow .group .entry .var-value { color: #027b09; }
 #logWindow .group .entry .var-value-sql {color: #887CAF; }
 #logWindow .group .entry .var-value-int {color: #66d9ef; }
 #logWindow .group .entry .var-value-float {color: #66d9ef; }
-#logWindow .group .entry .var-name {color: #1d5682;}
-#logWindow .group .entry .var-name::after { content: ": "; color: #AAA; }
+#logWindow .group .entry .var-name {color: #1d5682; padding-right: 1em;}
 #logWindow .group .entry .var-name-internal {color: #ff0086;}
-#logWindow .group .entry .var-name-internal::before { content: " ["; color: #AAA; }
-#logWindow .group .entry .var-name-internal::after { content: "] "; color: #AAA; }
 #logWindow .group .entry .exception {margin-top: 1em;}
 #logWindow .group .entry .exception .header {color: #fb660a}
 #logWindow .group .entry .exception .code {color: #57bcd1; margin: 0 1em;}
-#logWindow .group .entry .exception .code::before { content: "[Code:"; color: #666666;}
-#logWindow .group .entry .exception .code::after { content: "]"; color: #666666;}
 #logWindow .group .entry .exception .message {color: crimson;}
 #logWindow .group .entry .exception .trace {margin-left: 1em; font-weight: normal;}
 #logWindow .group .entry .exception .trace .line { color: #57bcd1; }

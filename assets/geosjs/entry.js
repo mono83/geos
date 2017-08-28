@@ -126,6 +126,7 @@ Entry.prototype.getDom = function getDom() {
 
                 // Rendering HTML
                 var html = '';
+                html += '<div class="table">';
                 Object.keys(cloned).forEach(function (name) {
                     var value = cloned[name];
                     if (Array.isArray(value) && value.length === 1) {
@@ -142,6 +143,7 @@ Entry.prototype.getDom = function getDom() {
                         html += '<div><span class="var-name">' + name + '</span><span class="var-value">' + value + '</span></div>';
                     }
                 });
+                html += '</div>';
                 // Additional section - for exceptions
                 if (extra.exception) {
                     html += '<div class="exception">';
@@ -164,7 +166,7 @@ Entry.prototype.getDom = function getDom() {
                     html += '</div>'
                 }
                 $unfold.innerHTML = html;
-                $unfold.style.display = 'block';
+                $unfold.style.display = 'table';
             } else {
                 // Current state - closed, removing rendered items
                 while ($unfold.hasChildNodes()) {
