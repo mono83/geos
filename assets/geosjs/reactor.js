@@ -4,6 +4,7 @@ function Reactor() {
     this._reserved = "geos";
     this._socket = null;
     this._groups = {};
+    this._mustBeConnected = false;
     this.initialTitle = null;
     this.total = 0;
     this.$logs = null;
@@ -59,8 +60,10 @@ Reactor.prototype.connect = function connect() {
         self.$buttonConnect.classList.add('active');
         self.debug("Connection to backend established");
         self._socket = socket;
+        self._mustBeConnected = true;
     };
     socket.onerror = function onerror() {
+        console.log(arguments);
         self.debug("Error");
         socket.close();
     };
@@ -69,10 +72,22 @@ Reactor.prototype.connect = function connect() {
         self.$buttonConnect.classList.add('inactive');
         self.debug("Connection closed");
         self._socket = null;
+        setTimeout(self.reconnect.bind(self), 2000)
     };
     socket.onmessage = function onmessage(raw) {
         self.emit(new Entry(JSON.parse(raw.data)))
+    };
+};
+
+/**
+ * Performs reconnection sequence
+ */
+Reactor.prototype.reconnect = function reconnect() {
+    if (!this._mustBeConnected || this._socket !== null) {
+        return;
     }
+
+    this.connect();
 };
 
 /**
@@ -94,6 +109,7 @@ Reactor.prototype.init = function init(debugMode) {
             self.$buttonConnect.classList.add('inactive');
             self._socket.close();
             self._socket = null;
+            self._mustBeConnected = false;
         } else {
             self.connect();
         }
