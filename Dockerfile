@@ -5,9 +5,8 @@ RUN apk add --no-cache make git && \
     make release
 
     
-FROM alpine:latest  
+FROM busybox:1.27.2
 COPY --from=builder /go/src/github.com/mono83/geos/release/geos-linux64 /geos
-RUN apk --no-cache add ca-certificates && \
-    chmod a+x /geos
+RUN chmod a+x /geos
 EXPOSE 5001 80
 CMD ["/geos", ":5001", ":80"]
