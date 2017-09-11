@@ -77,6 +77,9 @@ filters.push(new Filter("[Java] Maintainer events", function (e) {
     var level = e.getLevel();
     return e.getLogger() === "maintain" && (level === "trace" || level === "debug" || level === "info");
 }));
+filters.push(new Filter("[AF] Reporting sync garbage", function (e) {
+    return e.getLevel() === "info" && e.data.name === "reportingSync" && e.data.pattern === "Handling incoming request on :path";
+}));
 
 
 if (window.GEOS) {
