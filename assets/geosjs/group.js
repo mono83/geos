@@ -14,6 +14,7 @@ function Group(entry) {
     this.applicationName = new Set();
     this.applicationName.add(entry.getApplicationName());
     this.count = {msg: 0, err: 0, skip: 0};
+    this.limit = 1000; // Messages limit within single group.
     this.items = [];
     this.open = false; // Open or folded mode
     this.uml = false; // Open or closed UML
@@ -37,7 +38,7 @@ function Group(entry) {
  * @param {Entry} entry
  */
 Group.prototype.add = function add(entry) {
-    if (this.skip && this.items.length > 0) {
+    if ((this.skip && this.items.length > 0) || this.items.length > this.limit) {
         this.count.skip++;
     } else {
         this.items.push(entry);
@@ -189,8 +190,8 @@ Group.prototype.generateLoggerSequenceUML = function generateLoggerSequenceUML()
         var current = o.getLoggerShort();
         if (current !== previous) {
             if (previous) {
-                if (list[list.length-1] === current + '->' + previous + ':') {
-                    list[list.length-1] = current + '<->' + previous + ':';
+                if (list[list.length - 1] === current + '->' + previous + ':') {
+                    list[list.length - 1] = current + '<->' + previous + ':';
                 } else {
                     list.push(previous + '->' + current + ':');
                 }
