@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Logstash RT (0.3.5-beta)</title>
+        <title>Logstash RT (0.4.0-beta)</title>
         <link href='http://fonts.googleapis.com/css?family=Roboto&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
         <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700&subset=cyrillic-ext,cyrillic,latin' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="css/font-awesome.min.css">
@@ -8,13 +8,16 @@
         <script src="geosjs/entry.js"></script>
         <script src="geosjs/group.js"></script>
         <script src="geosjs/reactor.js"></script>
+        <script src="geosjs/filters.js"></script>
     </head>
     <body>
     <div id="topFrame">
         <span class="logo">Logstash RT client</span>
         <i id="connectBtn" class="fa fa-link faBtn inactive" aria-hidden="true" title="Connect/Disconnect"></i>
+        <i id="filtersBtn" class="fa fa-filter faBtn" aria-hidden="true" title="Filters"></i>
         <i id="clearBtn" class="fa fa-eraser faBtn" aria-hidden="true" title="Clear"></i>
     </div>
+    <div id="filtersWindow"></div>
     <div id="logWindow"></div>
     </body>
     <script>

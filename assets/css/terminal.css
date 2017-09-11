@@ -82,3 +82,12 @@ body {margin: 0; padding: 0; background-color: black; color: white;}
 #logWindow .group .entry .exception .trace .line { color: #57bcd1; }
 #logWindow .group .entry .exception .trace .line:before { content: " line "; color: #666666; }
 #logWindow .group .entry .exception .trace .file:before { content: " file "; color: #666666; }
+
+#filtersWindow { }
+#filtersWindow > div { border: 2px solid #999999; color: #999999; margin: 2px; padding: 2px 0.5em; cursor: pointer; display: inline-block; }
+#filtersWindow > div:hover, #filtersWindow > div.active:hover { border-color: white; }
+#filtersWindow > div:hover i { color: white; }
+#filtersWindow > div i { font-size: 14pt; }
+#filtersWindow > div span { font: normal 12pt "LoadedFont" }
+#filtersWindow > div span.counter { font-size: 9pt; }
+#filtersWindow > div.active { border-color: #027b09; background-color: #012703; color: #a6e22e; }

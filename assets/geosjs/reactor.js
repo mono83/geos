@@ -4,18 +4,30 @@ function Reactor() {
     this._reserved = "geos";
     this._socket = null;
     this._groups = {};
+    this._filters = [];
     this._mustBeConnected = false;
     this.initialTitle = null;
     this.total = 0;
+    this.filtersShown = false;
     this.$logs = null;
+    this.$filters = null;
     this.$buttonConnect = null;
     this.$buttonClear = null;
+    this.$buttonFilters = null;
 }
 
 /**
  * @param {Entry} pkt
  */
 Reactor.prototype.emit = function emit(pkt) {
+    if (pkt.getApplicationName() !== "geos") {
+        // Applying filtering
+        for (var i = 0; i < this._filters.length; i++) {
+            if (!this._filters[i].allows(pkt)) {
+                return;
+            }
+        }
+    }
     var name = pkt.getRayId();
     this.total++;
     if (!this._groups.hasOwnProperty(name)) {
@@ -63,7 +75,6 @@ Reactor.prototype.connect = function connect() {
         self._mustBeConnected = true;
     };
     socket.onerror = function onerror() {
-        console.log(arguments);
         self.debug("Error");
         socket.close();
     };
@@ -98,8 +109,10 @@ Reactor.prototype.init = function init(debugMode) {
     this.initialTitle = window.document.title;
 
     this.$logs = document.getElementById('logWindow');
+    this.$filters = document.getElementById('filtersWindow');
     this.$buttonConnect = document.getElementById('connectBtn');
     this.$buttonClear = document.getElementById('clearBtn');
+    this.$buttonFilters = document.getElementById('filtersBtn');
 
     var self = this;
     this.$buttonConnect.addEventListener('click', function () {
@@ -128,15 +141,35 @@ Reactor.prototype.init = function init(debugMode) {
         self.debug("Output cleared");
     });
 
+    this.$buttonFilters.addEventListener('click', this.toggleDisplayFilters.bind(this));
+
     this.connect();
     if (debugMode) {
         this.fixture();
-        window.setTimeout(function() {
+        window.setTimeout(function () {
             var $ = document.querySelector('div.group[index="2"]');
             $.querySelector('.time').click();
             $.querySelector('.unfold .entry[index="4"] .time').click();
             $.querySelector('.unfold .entry[index="9"] .time').click();
-        }, 100);
+
+            this.$buttonFilters.click();
+        }.bind(this), 100);
+    }
+};
+
+/**
+ * Shows or hides filters
+ */
+Reactor.prototype.toggleDisplayFilters = function toggleDisplayFilters() {
+    this.filtersShown = !this.filtersShown;
+    if (this.filtersShown) {
+        for (var i = 0; i < this._filters.length; i++) {
+            this.$filters.appendChild(this._filters[i].getDom());
+        }
+    } else {
+        while (this.$filters.hasChildNodes()) {
+            this.$filters.removeChild(this.$filters.firstChild);
+        }
     }
 };
 
@@ -144,20 +177,20 @@ Reactor.prototype.init = function init(debugMode) {
  * Rendering test
  */
 Reactor.prototype.fixture = function fixture() {
-    this.emit(new Entry({"rayId": "render", "app": "geos", "log-level": "trace", "message": "This is trace message"}));
-    this.emit(new Entry({"rayId": "render", "app": "geos", "log-level": "debug", "message": "This is debug message"}));
-    this.emit(new Entry({"rayId": "render", "app": "geos", "log-level": "info", "message": "This is info message"}));
+    this.emit(new Entry({"rayId": "render", "app": "test", "log-level": "trace", "message": "This is trace message"}));
+    this.emit(new Entry({"rayId": "render", "app": "test", "log-level": "debug", "message": "This is debug message"}));
+    this.emit(new Entry({"rayId": "render", "app": "test", "log-level": "info", "message": "This is info message"}));
     this.emit(new Entry({
         "rayId": "render",
-        "app": "geos",
+        "app": "test",
         "log-level": "warning",
         "message": "This is warning message"
     }));
-    this.emit(new Entry({"rayId": "render", "app": "geos", "log-level": "error", "message": "This is error message"}));
+    this.emit(new Entry({"rayId": "render", "app": "test", "log-level": "error", "message": "This is error message"}));
     this.emit(new Entry({"rayId": "render", "app": "test", "log-level": "alert", "message": "This is alert message"}));
     this.emit(new Entry({
         "rayId": "render",
-        "app": "geos",
+        "app": "test",
         "log-level": "critical",
         "message": "This is critical message"
     }));
@@ -179,7 +212,7 @@ Reactor.prototype.fixture = function fixture() {
     var self = this;
     var index = 0;
     return;
-    window.setInterval(function() {
+    window.setInterval(function () {
         // Emitting event at regular basis
         self.emit(new Entry({
             "rayId": "render",
