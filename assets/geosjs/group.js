@@ -21,6 +21,7 @@ function Group(entry) {
     this.skip = false; // Skip appending
     this.$ = null;
     this.$app = null;
+    this.$entries = null;
     this.$cntMsg = null;
     this.$cntErr = null;
     this.$cntSkip = null;
@@ -45,8 +46,11 @@ Group.prototype.add = function add(entry) {
         this.count.msg++;
     }
 
-    if (entry.isError()) {
+    if (entry.isError() && this.$entries) {
         this.count.err++;
+        if (!this.$entries.classList.contains('hasErrors')) {
+            this.$entries.classList.add('hasErrors')
+        }
     }
     if (this.$cntMsg) {
         this.$cntMsg.innerText = this.count.msg;
@@ -91,6 +95,7 @@ Group.prototype.getDom = function getDom() {
             '</div><div class="unfold"></div><div class="uml"></div>';
 
         this.$ = $;
+        this.$entries = $.querySelector(".entries");
         this.$cntMsg = $.querySelector(".entries > .msg");
         this.$cntErr = $.querySelector(".entries > .err");
         this.$cntSkip = $.querySelector(".entries > .skip");
