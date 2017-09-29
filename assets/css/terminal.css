@@ -42,6 +42,7 @@ body {margin: 0; padding: 0; background-color: black; color: white;}
 #logWindow .group .content { margin: 0 0 10px .5em; border-left: .5em solid #fb660a; padding-left: .5em; }
 #logWindow .group .header .sharedTags { color: #66d9ef; }
 #logWindow .group .header .entries { color: #666666; margin-left: 0.5em; }
+#logWindow .group .header .entries.hasErrors { color: crimson; }
 #logWindow .group .header .commands .active { color: white; }
 #logWindow .group .header .tail { color: #455d45; }
 
