@@ -113,6 +113,7 @@ Reactor.prototype.init = function init(debugMode) {
     this.$buttonConnect = document.getElementById('connectBtn');
     this.$buttonClear = document.getElementById('clearBtn');
     this.$buttonFilters = document.getElementById('filtersBtn');
+    this.$topFrame = document.getElementById('topFrame');
 
     var self = this;
     this.$buttonConnect.addEventListener('click', function () {
@@ -166,7 +167,11 @@ Reactor.prototype.toggleDisplayFilters = function toggleDisplayFilters() {
         for (var i = 0; i < this._filters.length; i++) {
             this.$filters.appendChild(this._filters[i].getDom());
         }
+        this.$filters.classList.remove('hidden');
+        this.$logs.style.paddingTop = this.$topFrame.offsetHeight + 2 + this.$filters.offsetHeight;
     } else {
+        this.$filters.classList.add('hidden');
+        this.$logs.style.paddingTop = this.$topFrame.offsetHeight + 2;
         while (this.$filters.hasChildNodes()) {
             this.$filters.removeChild(this.$filters.firstChild);
         }

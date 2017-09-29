@@ -14,7 +14,7 @@ Cyan: #66d9ef
 
 body {margin: 0; padding: 0; background-color: black; color: white;}
 
-#topFrame { border-bottom: 2px solid #027b09; padding: 2px 5px; margin-bottom: 3px; background-color: #012703; overflow: hidden; }
+#topFrame { border-bottom: 2px solid #027b09; padding: 2px 5px; margin-bottom: 3px; background-color: #012703; overflow: hidden; height: 25px; position: fixed; top: 0; left: 0; right: 0; }
 #topFrame .faBtn { cursor:pointer; display: inline-block; padding: 2px 4px; font-size: 16pt; color: white; background-color: #1d5682; vertical-align: middle; }
 #topFrame .faBtn:hover { background-color: white; color: black; }
 #topFrame .faBtn.active { background-color: #a6e22e; }
@@ -22,7 +22,7 @@ body {margin: 0; padding: 0; background-color: black; color: white;}
 
 #topFrame .logo { color: #027b09; font-size: 33px; line-height: 15px; vertical-align: bottom; margin-right: 15px; font-family: sans-serif; }
 
-#logWindow {font: normal 11pt "LoadedFont" }
+#logWindow {font: normal 11pt "LoadedFont"; padding-top: 33px; }
 #logWindow .group {padding: 1px;}
 #logWindow .group .header {padding: 0 5px; white-space: nowrap; }
 #logWindow .group .header .fa {font-size: 10pt;}
@@ -84,7 +84,7 @@ body {margin: 0; padding: 0; background-color: black; color: white;}
 #logWindow .group .entry .exception .trace .line:before { content: " line "; color: #666666; }
 #logWindow .group .entry .exception .trace .file:before { content: " file "; color: #666666; }
 
-#filtersWindow { }
+#filtersWindow { min-height: 31px; position: fixed; top: 31px; left: 0; right: 0; background-color: #000; padding-top: 3px; }
 #filtersWindow > div { border: 2px solid #999999; color: #999999; margin: 2px; padding: 2px 0.5em; cursor: pointer; display: inline-block; }
 #filtersWindow > div:hover, #filtersWindow > div.active:hover { border-color: white; }
 #filtersWindow > div:hover i { color: white; }
@@ -92,3 +92,5 @@ body {margin: 0; padding: 0; background-color: black; color: white;}
 #filtersWindow > div span { font: normal 12pt "LoadedFont" }
 #filtersWindow > div span.counter { font-size: 9pt; }
 #filtersWindow > div.active { border-color: #027b09; background-color: #012703; color: #a6e22e; }
+
+.hidden { display: none; }
