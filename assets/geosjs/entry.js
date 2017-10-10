@@ -134,11 +134,11 @@ Entry.prototype.getDom = function getDom() {
                     }
 
                     if (Array.isArray(value)) {
-                        html += '<div><span class="var-name">' + name + '</span><br/>';
+                        html += '<div><span class="var-name">' + name + '</span><span class="var-value">';
                         value.forEach(function (v) {
-                            html += '<span class="var-value">' + v + '</span><br/>';
+                            html += v + '<br/>';
                         });
-                        html += '</div>'
+                        html += '</span></div>'
                     } else {
                         html += '<div><span class="var-name">' + name + '</span><span class="var-value">' + value + '</span></div>';
                     }
