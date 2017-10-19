@@ -64,9 +64,9 @@ func (w *WebsocketTransport) IsAlive() bool {
 	return w.c != nil
 }
 
-// Send sends GEOS packet to wait queue
-func (w *WebsocketTransport) Send(packet *geos.Packet) {
-	w.ch <- packet
+// Channel returns delivery channel
+func (w *WebsocketTransport) Channel() chan<- *geos.Packet {
+	return w.ch
 }
 
 // Deliver sends packets from wait queue to frontend

@@ -28,7 +28,7 @@ var GeosCmd = &cobra.Command{
 		r.Init()
 
 		// Starting UDP server
-		err := udp.Start(udpBind, 0, r.HandleBytes)
+		err := udp.Start(udpBind, 0, r.Delivery)
 		if err != nil {
 			return err
 		}

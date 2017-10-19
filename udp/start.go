@@ -6,13 +6,13 @@ import (
 )
 
 // Start starts plain UDP listener service
-func Start(bind string, size int, clb func([]byte)) error {
+func Start(bind string, size int, byteCh chan<- []byte) error {
 	if size == 0 {
 		size = 1024 * 8
 	}
 
 	if bind == "" {
-		return errors.New("Empty UDP address")
+		return errors.New("empty UDP address")
 	}
 	address, err := net.ResolveUDPAddr("udp", bind)
 	if err != nil {
@@ -33,7 +33,8 @@ func Start(bind string, size int, clb func([]byte)) error {
 			if err != nil {
 				// Connection error
 			} else {
-				go clb(buf[0:rlen])
+				// Sending data to listening channel
+				byteCh <- buf[0:rlen]
 			}
 		}
 	}()
