@@ -1,6 +1,8 @@
 package geos
 
 import (
+	"github.com/mono83/romeo"
+	"github.com/mono83/xray"
 	"log"
 	"sync"
 	"time"
@@ -19,8 +21,14 @@ type Router struct {
 	Delivery  chan []byte
 }
 
-// Init initializes router
-func (r *Router) Init() {
+// GetName returns service name
+func (*Router) GetName() string { return "Router" }
+
+// GetRunLevel returns startup priority
+func (*Router) GetRunLevel() romeo.RunLevel { return romeo.RunLevelBeforeMain }
+
+// Start initializes router
+func (r *Router) Start(ray xray.Ray) error {
 	r.receivers = []Receiver{}
 	if r.Delivery == nil {
 		r.Delivery = make(chan []byte)
@@ -60,6 +68,13 @@ func (r *Router) Init() {
 			}
 		}
 	}()
+	return nil
+}
+
+// Stop closes delivery channel on router
+func (r *Router) Stop(ray xray.Ray) error {
+	close(r.Delivery)
+	return nil
 }
 
 // Register adds new receiver

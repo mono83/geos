@@ -1,14 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"github.com/mono83/geos/cmd"
-	"os"
+	"github.com/mono83/xray/std/xcobra"
 )
 
 func main() {
-	if err := cmd.GeosCmd.Execute(); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
-	}
+	xcobra.Start(cmd.GeosCmd)
 }
