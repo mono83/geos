@@ -3,6 +3,8 @@ package www
 import (
 	"github.com/gorilla/websocket"
 	"github.com/mono83/geos"
+	"github.com/mono83/xray"
+	"github.com/mono83/xray/args"
 	"log"
 	"net/http"
 	"time"
@@ -35,6 +37,7 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		// Reading
 		go wtr.Deliver()
+		go wtr.read()
 
 		// Registering in router
 		h.Router.Register(wtr)
@@ -46,7 +49,7 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	} else if bts, err := geos.Asset("assets/" + addr[1:]); err == nil {
 		w.WriteHeader(200)
-		w.Write(bts)
+		_, _ = w.Write(bts)
 		return
 	}
 
@@ -74,10 +77,34 @@ func (w *WebsocketTransport) Deliver() {
 	for packet := range w.ch {
 		if w.c != nil {
 			if err := w.c.WriteMessage(websocket.TextMessage, packet.Bytes()); err != nil {
-				log.Println(err)
-				w.c.Close()
-				w.c = nil
+				xray.ROOT.Fork().WithLogger("ws").Error("Delivery error - :err", args.Error{Err: err})
+				_ = w.close()
 			}
 		}
 	}
+}
+
+// read method reads and discards all data from client
+// is used to shutdown listener when client disconnected
+func (w *WebsocketTransport) read() {
+	var err error
+	for err == nil {
+		connection := w.c
+		if connection != nil {
+			_, _, err = connection.ReadMessage()
+		}
+	}
+
+	// Closing
+	_ = w.close()
+}
+
+// close method closes WS connection
+func (w *WebsocketTransport) close() (err error) {
+	connection := w.c
+	if connection != nil {
+		err = connection.Close()
+	}
+	w.c = nil
+	return
 }
