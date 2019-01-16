@@ -3,6 +3,7 @@ package udp
 import (
 	"errors"
 	"github.com/mono83/xray"
+	"github.com/mono83/xray/args"
 	"net"
 )
 
@@ -38,18 +39,21 @@ func (u *Service) Start(ray xray.Ray) error {
 
 	// Listener
 	go func() {
+		goRay := ray.Fork().WithLogger("udp-listener")
 		var skt = u.socket
 		for skt != nil {
 			buf := make([]byte, u.Size)
 			rlen, _, err := skt.ReadFromUDP(buf)
 			if err != nil {
 				// Connection error
+				goRay.Error("UDP error :err", args.Error{Err: err})
 			} else {
 				// Sending data to listening channel
 				u.ByteCh <- buf[0:rlen]
 			}
 			skt = u.socket
 		}
+		goRay.Info("UDP listener done")
 	}()
 
 	return nil
