@@ -27,6 +27,7 @@ deps: ## Download required dependencies
 	@go get github.com/jteeuwen/go-bindata/...
 	@go get github.com/gorilla/websocket/...
 	@go get github.com/spf13/cobra
+	@go get github.com/mono83/romeo	
 
 release: clean deps assets test ## Runs all release tasks
 	@echo $(shell date +'%H:%M:%S') "\033[0;32mCompiling Linux version\033[0m"
