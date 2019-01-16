@@ -38,15 +38,17 @@ func (u *Service) Start(ray xray.Ray) error {
 
 	// Listener
 	go func() {
-		for u.socket != nil {
+		var skt = u.socket
+		for skt != nil {
 			buf := make([]byte, u.Size)
-			rlen, _, err := u.socket.ReadFromUDP(buf)
+			rlen, _, err := skt.ReadFromUDP(buf)
 			if err != nil {
 				// Connection error
 			} else {
 				// Sending data to listening channel
 				u.ByteCh <- buf[0:rlen]
 			}
+			skt = u.socket
 		}
 	}()
 
