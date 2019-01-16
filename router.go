@@ -1,9 +1,10 @@
 package geos
 
 import (
+	"errors"
 	"github.com/mono83/romeo"
 	"github.com/mono83/xray"
-	"log"
+	"github.com/mono83/xray/args"
 	"sync"
 	"time"
 )
@@ -21,6 +22,16 @@ type Router struct {
 	Delivery  chan []byte
 }
 
+// NewRouter builds and returns router with delivery channel created
+func NewRouter() *Router {
+	r := &Router{
+		receivers: []Receiver{},
+		Delivery:  make(chan []byte),
+	}
+
+	return r
+}
+
 // GetName returns service name
 func (*Router) GetName() string { return "Router" }
 
@@ -31,33 +42,43 @@ func (*Router) GetRunLevel() romeo.RunLevel { return romeo.RunLevelBeforeMain }
 func (r *Router) Start(ray xray.Ray) error {
 	r.receivers = []Receiver{}
 	if r.Delivery == nil {
-		r.Delivery = make(chan []byte)
+		return errors.New("delivery channel not initialized, you should invoke NewRouter")
 	}
 
 	// Starting receivers invalidation goroutine
 	go func() {
+		goRay := ray.Fork().WithLogger("router")
 		for {
 			time.Sleep(time.Second)
 			r.m.Lock()
-			nl := []Receiver{}
+			var nl []Receiver
+			disconnected := 0
 			for _, receiver := range r.receivers {
 				if receiver.IsAlive() {
 					nl = append(nl, receiver)
+				} else {
+					disconnected++
 				}
 			}
+			r.receivers = nl
 			r.m.Unlock()
+
+			if disconnected > 0 {
+				goRay.Info("Disconnected :count receivers", args.Count(disconnected))
+			}
 		}
 	}()
 
 	// Starting delivery goroutine
 	go func() {
+		goRay := ray.Fork().WithLogger("router")
 		for bts := range r.Delivery {
 			if len(bts) > 0 {
 				// Parsing packet
 				pkt := &Packet{}
 				err := pkt.ParseLogstash(bts)
 				if err != nil {
-					log.Print("Invalid packet received")
+					goRay.Error("Invalid packet received - :err", args.Error{Err: err})
 				} else {
 					r.m.Lock()
 					for _, receiver := range r.receivers {
@@ -80,6 +101,8 @@ func (r *Router) Stop(ray xray.Ray) error {
 // Register adds new receiver
 func (r *Router) Register(receiver Receiver) {
 	if receiver != nil {
+		log := xray.ROOT.Fork().WithLogger("router")
+		log.Info("New receiver attached")
 		r.m.Lock()
 		defer r.m.Unlock()
 

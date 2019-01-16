@@ -31,14 +31,14 @@ var GeosCmd = &cobra.Command{
 		srv := &server.Server{}
 
 		// Building router
-		r := &geos.Router{}
-		srv.Register(r)
+		r := geos.NewRouter()
+		_ = srv.Register(r)
 
 		// Building UDP server
-		srv.Register(&udp.Service{Bind: udpBind, Size: 0, ByteCh: r.Delivery})
+		_ = srv.Register(&udp.Service{Bind: udpBind, Size: 0, ByteCh: r.Delivery})
 
 		// Building HTTP server
-		srv.Register(&xhttp.Service{
+		_ = srv.Register(&xhttp.Service{
 			Bind:    httpBind,
 			Name:    "HTTP service",
 			Handler: &www.Handler{Router: r},
