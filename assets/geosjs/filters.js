@@ -70,21 +70,9 @@ filters.push(new Filter("Trace", function (e) {
 filters.push(new Filter("Debug", function (e) {
     return e.getLevel() === "debug"
 }));
-filters.push(new Filter("[Java] MySQLTaskRepository garbage", function (e) {
-    return e.getLevel() === "debug" && e.data.name === "MySQLTaskRepository" && e.data.pattern === "No data received in :elapsed for :sql";
+filters.push(new Filter("Info", function (e) {
+    return e.getLevel() === "info"
 }));
-filters.push(new Filter("[Java] Task info", function (e) {
-    return e.getLevel() === "info" && e.data.name === "TaskBasedRpc"
-        && (e.data.pattern === "Incoming RPC request to :route" || e.data.pattern === "Task :taskId released with nextAt :next");
-}));
-filters.push(new Filter("[Java] Maintainer events", function (e) {
-    var level = e.getLevel();
-    return e.getLogger() === "maintain" && (level === "trace" || level === "debug" || level === "info");
-}));
-filters.push(new Filter("[AF] Reporting sync garbage", function (e) {
-    return e.getLevel() === "info" && e.data.name === "reportingSync" && e.data.pattern === "Handling incoming request on :path";
-}));
-
 
 if (window.GEOS) {
     window.GEOS._filters = filters;
