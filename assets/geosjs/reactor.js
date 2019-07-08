@@ -5,6 +5,7 @@ function Reactor() {
     this._socket = null;
     this._groups = {};
     this._filters = [];
+    this._registeredDynamicFilters = [];
     this._mustBeConnected = false;
     this.initialTitle = null;
     this.total = 0;
@@ -21,6 +22,21 @@ function Reactor() {
  */
 Reactor.prototype.emit = function emit(pkt) {
     if (pkt.getApplicationName() !== "geos") {
+        // Adding filter by Application name
+        if (!this._registeredDynamicFilters.includes(pkt.getApplicationName())) {
+            var filterName = "[App] " + pkt.getApplicationName();
+
+            // Adding filter to window
+            window.GEOS._filters.push(new Filter(filterName, function (e) {
+                return e.getApplicationName() === pkt.getApplicationName();
+            }));
+
+            // Register dynamic filter
+            this._registeredDynamicFilters.push(pkt.getApplicationName());
+
+            console.info("Registered new filter " + filterName)
+        }
+
         // Applying filtering
         for (var i = 0; i < this._filters.length; i++) {
             if (!this._filters[i].allows(pkt)) {
