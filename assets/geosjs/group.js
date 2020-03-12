@@ -125,17 +125,12 @@ window.Group = (function () {
                 this.$entries.classList.add('hasErrors')
             }
         }
-        if (this.$cntMsg) {
-            this.$cntMsg.innerText = this.count.msg;
-            this.$cntErr.innerText = this.count.err;
-            this.$cntSkip.innerText = this.count.skip;
-        }
-        if (this.$time) {
-            this.$time.innerText = entry.time.toISOString().slice(11, 19);
-        }
-        if (this.$tail) {
-            this.$tail.innerText = entry.getMessage();
-        }
+        this.$cntMsg.innerText = this.count.msg;
+        this.$cntErr.innerText = this.count.err;
+        this.$cntSkip.innerText = this.count.skip;
+        this.$time.innerText = entry.time.toISOString().slice(11, 19);
+        this.$tail.innerText = entry.getMessage();
+
         if (this.$ && this.open && !this.skip) {
             this.$unfold.appendChild(entry.getDom());
         }

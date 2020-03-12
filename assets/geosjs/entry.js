@@ -86,11 +86,12 @@ Entry.prototype.getMessage = function getMessage() {
 Entry.prototype.getDom = function getDom() {
     if (this.$ === null) {
         var $ = document.createElement('div');
+        var isoTime = this.time.toISOString();
         $.setAttribute('index', this.index);
         $.classList.add("entry");
         $.classList.add("entry-" + this.getLevel());
         $.innerHTML = '<div class="line">' +
-            '<span class="time">' + this.time.toISOString().slice(14, 19) + '</span>' +
+            '<span class="time" title="' + isoTime + '">' + isoTime.slice(14, 19) + '</span>' +
             '<span class="message">' + this.getMessage() + '</span>' +
             '<span class="app">' + this.getApplicationName() + '</span>' +
             '</div><div class="details unfold"></div>';
