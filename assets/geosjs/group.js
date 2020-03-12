@@ -10,7 +10,11 @@ window.Group = (function () {
         $.innerHTML = '<div class="header">' +
             '<span class="time last"></span>' +
             '<span class="commands"><i class="fa fa-ban skipper" aria-hidden="true" title="Ignore group"></i><i class="fa fa-eraser clearer" aria-hidden="true" title="Erase messages"></i><i class="fa fa-exchange uml" aria-hidden="true" title="Render UML"></i></span>' +
-            '<span class="entries" title="Show logs in group"><span class="msg">' + group.count.msg + '</span>|<span class="err">' + group.count.err + '</span>|<span class="skip">' + group.count.skip + '</span></span>' +
+            '<span class="entries">' +
+                '<span class="msg" title="total count">' + group.count.msg + '</span>' +
+                '|<span class="err" title="errors count">' + group.count.err + '</span>' +
+                '|<span class="skip" title="skipped count">' + group.count.skip + '</span>' +
+            '</span>' +
             '<span class="title">' + group.label + '</span>' +
             '<span class="app">' + Array.from(group.applicationName).join() + '</span>' +
             '<span class="tail"></span>' +
@@ -77,6 +81,35 @@ window.Group = (function () {
     }
 
     /**
+     * @param {Group} group
+     * @param {Entry} entry
+     * @return {Entry|null}
+     */
+    function addEntryToList(group, entry) {
+        let len = group.items.length;
+
+        // insert to the end
+        if (len === 0
+            || group.items[len - 1].timestamp <= entry.timestamp // new entry is the youngest
+        ) {
+            group.items.push(entry);
+            return null;
+        }
+
+        // insert to the middle
+        for (var i = len - 1; i--; i >= 0) {
+            if (group.items[i].timestamp <= entry.timestamp) {
+                group.items.splice(i + 1, 0, entry); // add sorted
+                return group.items[i + 2]; // return next after current
+            }
+        }
+
+        // if all elements are younger, insert new to the beginning
+        group.items.splice(0, 0, entry);
+        return group.items[1];
+    }
+
+    /**
      * Log entries group constructor
      *
      * @param {string} label of the group
@@ -112,10 +145,13 @@ window.Group = (function () {
      * @param {Entry} entry
      */
     Group.prototype.add = function add(entry) {
-        if ((this.skip && this.items.length > 0) || this.items.length > this.limit) {
+        var skipEntry = (this.skip && this.items.length > 0) || this.items.length > this.limit;
+        var insertBefore = null;
+
+        if (skipEntry) {
             this.count.skip++;
         } else {
-            this.items.push(entry);
+            insertBefore = addEntryToList(this, entry); // messages are not sorted, put new in correct place
             this.count.msg++;
         }
 
@@ -131,8 +167,12 @@ window.Group = (function () {
         this.$time.innerText = entry.time.toISOString().slice(11, 19);
         this.$tail.innerText = entry.getMessage();
 
-        if (this.$ && this.open && !this.skip) {
-            this.$unfold.appendChild(entry.getDom());
+        if (this.open && !skipEntry) {
+            if (insertBefore === null) {
+                this.$unfold.appendChild(entry.getDom());
+            } else {
+                this.$unfold.insertBefore(entry.getDom(), insertBefore);
+            }
         }
 
         // Updating application

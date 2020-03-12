@@ -229,6 +229,32 @@ Reactor.prototype.fixture = function fixture() {
         }
     }));
 
+    var now = new Date().getTime();
+
+    this.emit(new Entry({
+        "rayId": "render",
+        "app": "test",
+        "log-level": "info",
+        "message": "Early event 2",
+        "event-time": new Date(now - 3000)
+    }));
+
+    this.emit(new Entry({
+        "rayId": "render",
+        "app": "test",
+        "log-level": "info",
+        "message": "Early event 1",
+        "event-time": new Date(now - 4000)
+    }));
+
+    this.emit(new Entry({
+        "rayId": "render",
+        "app": "test",
+        "log-level": "info",
+        "message": "Early event 3",
+        "event-time": new Date(now - 2000)
+    }));
+
     var self = this;
     var index = 0;
     return;

@@ -17,6 +17,7 @@ function Entry(data) {
     } else {
         this.time = new Date();
     }
+    this.timestamp = this.time.getTime();
 }
 
 /**
@@ -91,7 +92,7 @@ Entry.prototype.getDom = function getDom() {
         $.classList.add("entry");
         $.classList.add("entry-" + this.getLevel());
         $.innerHTML = '<div class="line">' +
-            '<span class="time" title="' + isoTime + '">' + isoTime.slice(14, 19) + '</span>' +
+            '<span class="time" title="' + isoTime.replace('T', ' ').replace('Z', '') + '">' + isoTime.slice(14, 19) + '</span>' +
             '<span class="message">' + this.getMessage() + '</span>' +
             '<span class="app">' + this.getApplicationName() + '</span>' +
             '</div><div class="details unfold"></div>';
