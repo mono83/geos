@@ -47,11 +47,10 @@ Reactor.prototype.emit = function emit(pkt) {
     var name = pkt.getRayId();
     this.total++;
     if (!this._groups.hasOwnProperty(name)) {
-        this._groups[name] = new Group(pkt);
+        this._groups[name] = new Group('ray=' + name);
         this.$logs.appendChild(this._groups[name].getDom());
-    } else {
-        this._groups[name].add(pkt);
     }
+    this._groups[name].add(pkt);
 
     window.document.title = '[' + this.total + '] ' + this.initialTitle;
 };
