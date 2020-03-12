@@ -27,9 +27,7 @@ Reactor.prototype.emit = function emit(pkt) {
             var filterName = "[App] " + pkt.getApplicationName();
 
             // Adding filter to window
-            window.GEOS._filters.push(new Filter(filterName, function (e) {
-                return e.getApplicationName() === pkt.getApplicationName();
-            }));
+            this.addFilter(filterName, e => e.getApplicationName() === pkt.getApplicationName(), false);
 
             // Register dynamic filter
             this._registeredDynamicFilters.push(pkt.getApplicationName());
@@ -38,21 +36,38 @@ Reactor.prototype.emit = function emit(pkt) {
         }
 
         // Applying filtering
-        for (var i = 0; i < this._filters.length; i++) {
-            if (!this._filters[i].allows(pkt)) {
-                return;
-            }
+        if (!this.isAllowedByFilters(pkt)) {
+            return;
         }
     }
     var name = pkt.getRayId();
     this.total++;
     if (!this._groups.hasOwnProperty(name)) {
-        this._groups[name] = new Group('ray=' + name);
+        this._groups[name] = new Group('ray=' + name, this.isAllowedByFilters.bind(this));
         this.$logs.appendChild(this._groups[name].getDom());
     }
     this._groups[name].add(pkt);
 
     window.document.title = '[' + this.total + '] ' + this.initialTitle;
+};
+
+Reactor.prototype.addFilter = function(name, predicate, enabled) {
+    this._filters.push(new Filter(name, predicate, enabled, this.onFilterChange.bind(this)));
+};
+
+Reactor.prototype.onFilterChange = function() {
+    for (let group of Object.values(this._groups)) {
+        group.onFilterChange();
+    }
+};
+
+Reactor.prototype.isAllowedByFilters = function(pkt) {
+    for (var i = 0; i < this._filters.length; i++) {
+        if (!this._filters[i].allows(pkt)) {
+            return false;
+        }
+    }
+    return true;
 };
 
 /**
@@ -129,6 +144,10 @@ Reactor.prototype.init = function init(debugMode) {
     this.$buttonClear = document.getElementById('clearBtn');
     this.$buttonFilters = document.getElementById('filtersBtn');
     this.$topFrame = document.getElementById('topFrame');
+
+    this.addFilter("Trace", e => e.getLevel() === "trace", true);
+    this.addFilter("Debug", e => e.getLevel() === "debug", false);
+    this.addFilter("Info", e => e.getLevel() === "info", false);
 
     var self = this;
     this.$buttonConnect.addEventListener('click', function () {
@@ -234,7 +253,7 @@ Reactor.prototype.fixture = function fixture() {
     this.emit(new Entry({
         "rayId": "render",
         "app": "test",
-        "log-level": "info",
+        "log-level": "debug",
         "message": "Early event 2",
         "event-time": new Date(now - 3000)
     }));
@@ -250,7 +269,7 @@ Reactor.prototype.fixture = function fixture() {
     this.emit(new Entry({
         "rayId": "render",
         "app": "test",
-        "log-level": "info",
+        "log-level": "debug",
         "message": "Early event 3",
         "event-time": new Date(now - 2000)
     }));

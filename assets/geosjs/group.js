@@ -44,23 +44,7 @@ window.Group = (function () {
 
         $.querySelector('.commands .clearer').addEventListener('click', group.clear.bind(group));
 
-        var $time = $.querySelector('.time');
-        $time.addEventListener('click', function () {
-            group.open = !group.open;
-            if (group.open) {
-                $time.parentNode.parentNode.classList.add('selected');
-                // Current state - is open, rendering
-                group.items.forEach(function (entry) {
-                    group.$unfold.appendChild(entry.getDom());
-                }, group);
-            } else {
-                $time.parentNode.parentNode.classList.remove('selected');
-                // Current state - closed, removing rendered items
-                while (group.$unfold.hasChildNodes()) {
-                    group.$unfold.removeChild(group.$unfold.firstChild);
-                }
-            }
-        }.bind(group));
+        $.querySelector('.time').addEventListener('click', group.toggle.bind(group));
 
         $.querySelector(".commands .uml").addEventListener('click', function () {
             group.uml = !group.uml;
@@ -113,11 +97,13 @@ window.Group = (function () {
      * Log entries group constructor
      *
      * @param {string} label of the group
+     * @param {function} allowByFiltersPredicate
      * @constructor
      */
-    function Group(label) {
+    function Group(label, allowByFiltersPredicate) {
         this.index = indexGroup++;
         this.label = label;
+        this.allowByFiltersPredicate = allowByFiltersPredicate;
         this.applicationName = new Set();
         this.count = {msg: 0, err: 0, skip: 0};
         this.limit = 1000; // Messages limit within single group.
@@ -146,12 +132,12 @@ window.Group = (function () {
      */
     Group.prototype.add = function add(entry) {
         var skipEntry = (this.skip && this.items.length > 0) || this.items.length > this.limit;
-        var insertBefore = null;
+        var insertBeforeEntry = null;
 
         if (skipEntry) {
             this.count.skip++;
         } else {
-            insertBefore = addEntryToList(this, entry); // messages are not sorted, put new in correct place
+            insertBeforeEntry = addEntryToList(this, entry); // messages are not sorted, put new in correct place
             this.count.msg++;
         }
 
@@ -168,10 +154,10 @@ window.Group = (function () {
         this.$tail.innerText = entry.getMessage();
 
         if (this.open && !skipEntry) {
-            if (insertBefore === null) {
+            if (insertBeforeEntry === null) {
                 this.$unfold.appendChild(entry.getDom());
             } else {
-                this.$unfold.insertBefore(entry.getDom(), insertBefore);
+                this.$unfold.insertBefore(entry.getDom(), insertBeforeEntry.getDom());
             }
         }
 
@@ -182,6 +168,33 @@ window.Group = (function () {
             if (this.applicationName.size !== before && this.$app) {
                 this.$app.innerText = Array.from(this.applicationName).join(',');
             }
+        }
+    };
+
+    Group.prototype.toggle = function() {
+        this.open = !this.open;
+        if (this.open) {
+            this.$.classList.add('selected');
+            // Current state - is open, rendering
+            this.items.forEach(function (entry) {
+                if (this.allowByFiltersPredicate(entry)) {
+                    this.$unfold.appendChild(entry.getDom());
+                }
+            }, this);
+        } else {
+            this.$.classList.remove('selected');
+            // Current state - closed, removing rendered items
+            while (this.$unfold.hasChildNodes()) {
+                this.$unfold.removeChild(this.$unfold.firstChild);
+            }
+        }
+    };
+
+    Group.prototype.onFilterChange = function() {
+        if (this.open) {
+            this.items.forEach(
+                entry => entry.getDom().style.display = this.allowByFiltersPredicate(entry) ? 'block' : 'none'
+            );
         }
     };
 
