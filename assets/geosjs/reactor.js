@@ -44,7 +44,7 @@ Reactor.prototype.emit = function emit(pkt) {
     var name = pkt.getRayId();
     this.total++;
     if (!this._groups.hasOwnProperty(name)) {
-        this._groups[name] = new Group('ray=' + name, this.isAllowedByFilters.bind(this));
+        this._groups[name] = new Group(name, this.isAllowedByFilters.bind(this));
         this.$logs.appendChild(this._groups[name].getDom());
     }
     this._groups[name].add(pkt);
