@@ -15,6 +15,7 @@ function Reactor() {
     this.$buttonConnect = null;
     this.$buttonClear = null;
     this.$buttonFilters = null;
+    this.updateTitleTimer = null;
 }
 
 /**
@@ -48,15 +49,30 @@ Reactor.prototype.emit = function emit(pkt) {
     }
     this._groups[name].add(pkt);
 
-    window.document.title = '[' + this.total + '] ' + this.initialTitle;
+    this.scheduleUpdateTitle();
 };
+
+/**
+ * Wrapper to prevent too frequent title update, because it can cause GUI freeze
+ */
+Reactor.prototype.scheduleUpdateTitle = function() {
+    if (this.updateTitleTimer !== null) {
+        return;
+    }
+
+    var self = this;
+    this.updateTitleTimer = setTimeout(function() {
+        window.document.title = '[' + self.total + '] ' + self.initialTitle;
+        self.updateTitleTimer = null;
+    }, 250);
+}
 
 Reactor.prototype.addFilter = function(name, predicate, enabled) {
     this._filters.push(new Filter(name, predicate, enabled, this.onFilterChange.bind(this)));
 };
 
 Reactor.prototype.onFilterChange = function() {
-    for (let group of Object.values(this._groups)) {
+    for (var group of Object.values(this._groups)) {
         group.onFilterChange();
     }
 };
@@ -174,6 +190,7 @@ Reactor.prototype.init = function init(debugMode) {
         });
         self._groups = newMap;
         self.debug("Output cleared");
+        self.total = 0;
     });
 
     this.$buttonFilters.addEventListener('click', this.toggleDisplayFilters.bind(this));
