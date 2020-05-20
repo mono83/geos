@@ -73,6 +73,9 @@ filters.push(new Filter("Debug", function (e) {
 filters.push(new Filter("Info", function (e) {
     return e.getLevel() === "info"
 }));
+filters.push(new Filter("Only route", function (e) {
+    return !(e.data && e.data.pattern && e.data.pattern === "Incoming RPC request to :route");
+}));
 
 if (window.GEOS) {
     window.GEOS._filters = filters;
