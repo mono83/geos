@@ -188,7 +188,7 @@ Entry.prototype.getDom = function getDom() {
  * @returns {*}
  */
 function tryGelf(data) {
-    if (data && data.host && data.level && data.short_message && data.full_message) {
+    if (data && data.host && data.level && data.short_message && data.version) {
         // Seems like data contains GELF-specific fields, assuming that this is GELF message
         data.object = data.host;
         data.pattern = data.short_message;
