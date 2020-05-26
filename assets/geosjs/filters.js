@@ -66,3 +66,21 @@ Filter.prototype.getDom = function getDom() {
     }
     return this.$;
 };
+
+// TODO
+filters.push(new Filter("Trace", function (e) {
+    return e.getLevel() === "trace"
+}, true));
+filters.push(new Filter("Debug", function (e) {
+    return e.getLevel() === "debug"
+}));
+filters.push(new Filter("Info", function (e) {
+    return e.getLevel() === "info"
+}));
+filters.push(new Filter("Only route", function (e) {
+    return !(e.data && e.data.pattern && e.data.pattern === "Incoming RPC request to :route");
+}));
+
+if (window.GEOS) {
+    window.GEOS._filters = filters;
+}

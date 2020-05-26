@@ -1,12 +1,16 @@
 package geos
 
 import (
+	"bytes"
+	"compress/gzip"
 	"errors"
+	"io/ioutil"
+	"sync"
+	"time"
+
 	"github.com/mono83/romeo"
 	"github.com/mono83/xray"
 	"github.com/mono83/xray/args"
-	"sync"
-	"time"
 )
 
 // Receiver describes receivers, that able to receive data
@@ -74,6 +78,9 @@ func (r *Router) Start(ray xray.Ray) error {
 		goRay := ray.Fork().WithLogger("router")
 		for bts := range r.Delivery {
 			if len(bts) > 0 {
+				// Decrypting
+				bts = detectAndDecrypt(bts)
+
 				// Parsing packet
 				pkt := &Packet{}
 				err := pkt.ParseLogstash(bts)
@@ -108,4 +115,27 @@ func (r *Router) Register(receiver Receiver) {
 
 		r.receivers = append(r.receivers, receiver)
 	}
+}
+
+var gzipSig = []byte("\x1F\x8B\x08")
+
+func detectAndDecrypt(b []byte) []byte {
+	if len(b) < 3 {
+		return b
+	}
+
+	if b[0] == gzipSig[0] && b[1] == gzipSig[1] && b[2] == gzipSig[2] {
+		reader := bytes.NewReader(b)
+		z, err := gzip.NewReader(reader)
+		if err != nil {
+			return b
+		}
+		defer z.Close()
+		p, err := ioutil.ReadAll(z)
+		if err == nil {
+			return p
+		}
+	}
+
+	return b
 }

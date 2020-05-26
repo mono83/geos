@@ -164,6 +164,11 @@ Reactor.prototype.init = function init(debugMode) {
     this.addFilter("Trace", e => e.getLevel() === "trace", true);
     this.addFilter("Debug", e => e.getLevel() === "debug", false);
     this.addFilter("Info", e => e.getLevel() === "info", false);
+    this.addFilter(
+        "Only route",
+        e => !(e.data && e.data.pattern && e.data.pattern === "Incoming RPC request to :route"),
+        false
+    );
 
     var self = this;
     this.$buttonConnect.addEventListener('click', function () {
