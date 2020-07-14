@@ -1,19 +1,19 @@
 "use strict";
 
-var filters = [];
-
 /**
  * Constructor for filters
  *
  * @param name      {string}          Filter name
  * @param predicate {function(Entry)} Filter predicate function
- * @param enabled   {boolean=}        Enabled or disabled by default
+ * @param enabled   {boolean}        Enabled or disabled by default
+ * @param onChange  {function}        Callback fired when filter toggles
  * @constructor
  */
-function Filter(name, predicate, enabled) {
+function Filter(name, predicate, enabled, onChange) {
     this.name = name;
     this.enabled = !!enabled;
     this.predicate = predicate;
+    this.onChange = onChange;
     this.$ = null;
     this.$cnt = null;
     this.filtered = 0;
@@ -55,6 +55,9 @@ Filter.prototype.getDom = function getDom() {
             } else {
                 $.classList.remove("active")
             }
+            if (this.onChange) {
+                this.onChange();
+            }
         }.bind(this));
 
         $.innerHTML = '<i class="fa fa-filter" aria-hidden="true" title="Filters"><span class="counter">' + this.filtered + '</span></i> <span class="name">' + this.name + '</span>';
@@ -64,6 +67,7 @@ Filter.prototype.getDom = function getDom() {
     return this.$;
 };
 
+// TODO
 filters.push(new Filter("Trace", function (e) {
     return e.getLevel() === "trace"
 }, true));

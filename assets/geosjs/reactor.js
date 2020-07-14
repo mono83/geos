@@ -15,6 +15,7 @@ function Reactor() {
     this.$buttonConnect = null;
     this.$buttonClear = null;
     this.$buttonFilters = null;
+    this.updateTitleTimer = null;
 }
 
 /**
@@ -27,9 +28,7 @@ Reactor.prototype.emit = function emit(pkt) {
             var filterName = "[App] " + pkt.getApplicationName();
 
             // Adding filter to window
-            window.GEOS._filters.push(new Filter(filterName, function (e) {
-                return e.getApplicationName() === pkt.getApplicationName();
-            }));
+            this.addFilter(filterName, e => e.getApplicationName() === pkt.getApplicationName(), false);
 
             // Register dynamic filter
             this._registeredDynamicFilters.push(pkt.getApplicationName());
@@ -38,22 +37,53 @@ Reactor.prototype.emit = function emit(pkt) {
         }
 
         // Applying filtering
-        for (var i = 0; i < this._filters.length; i++) {
-            if (!this._filters[i].allows(pkt)) {
-                return;
-            }
+        if (!this.isAllowedByFilters(pkt)) {
+            return;
         }
     }
     var name = pkt.getRayId();
     this.total++;
     if (!this._groups.hasOwnProperty(name)) {
-        this._groups[name] = new Group(pkt);
+        this._groups[name] = new Group(name, this.isAllowedByFilters.bind(this));
         this.$logs.appendChild(this._groups[name].getDom());
-    } else {
-        this._groups[name].add(pkt);
+    }
+    this._groups[name].add(pkt);
+
+    this.scheduleUpdateTitle();
+};
+
+/**
+ * Wrapper to prevent too frequent title update, because it can cause GUI freeze
+ */
+Reactor.prototype.scheduleUpdateTitle = function() {
+    if (this.updateTitleTimer !== null) {
+        return;
     }
 
-    window.document.title = '[' + this.total + '] ' + this.initialTitle;
+    var self = this;
+    this.updateTitleTimer = setTimeout(function() {
+        window.document.title = '[' + self.total + '] ' + self.initialTitle;
+        self.updateTitleTimer = null;
+    }, 250);
+}
+
+Reactor.prototype.addFilter = function(name, predicate, enabled) {
+    this._filters.push(new Filter(name, predicate, enabled, this.onFilterChange.bind(this)));
+};
+
+Reactor.prototype.onFilterChange = function() {
+    for (var group of Object.values(this._groups)) {
+        group.onFilterChange();
+    }
+};
+
+Reactor.prototype.isAllowedByFilters = function(pkt) {
+    for (var i = 0; i < this._filters.length; i++) {
+        if (!this._filters[i].allows(pkt)) {
+            return false;
+        }
+    }
+    return true;
 };
 
 /**
@@ -131,6 +161,15 @@ Reactor.prototype.init = function init(debugMode) {
     this.$buttonFilters = document.getElementById('filtersBtn');
     this.$topFrame = document.getElementById('topFrame');
 
+    this.addFilter("Trace", e => e.getLevel() === "trace", true);
+    this.addFilter("Debug", e => e.getLevel() === "debug", false);
+    this.addFilter("Info", e => e.getLevel() === "info", false);
+    this.addFilter(
+        "Only route",
+        e => !(e.data && e.data.pattern && e.data.pattern === "Incoming RPC request to :route"),
+        false
+    );
+
     var self = this;
     this.$buttonConnect.addEventListener('click', function () {
         if (self._socket !== null) {
@@ -156,6 +195,7 @@ Reactor.prototype.init = function init(debugMode) {
         });
         self._groups = newMap;
         self.debug("Output cleared");
+        self.total = 0;
     });
 
     this.$buttonFilters.addEventListener('click', this.toggleDisplayFilters.bind(this));
@@ -228,6 +268,32 @@ Reactor.prototype.fixture = function fixture() {
                 {file: "index.php", line: 4}
             ]
         }
+    }));
+
+    var now = new Date().getTime();
+
+    this.emit(new Entry({
+        "rayId": "render",
+        "app": "test",
+        "log-level": "debug",
+        "message": "Early event 2",
+        "event-time": new Date(now - 3000)
+    }));
+
+    this.emit(new Entry({
+        "rayId": "render",
+        "app": "test",
+        "log-level": "info",
+        "message": "Early event 1",
+        "event-time": new Date(now - 4000)
+    }));
+
+    this.emit(new Entry({
+        "rayId": "render",
+        "app": "test",
+        "log-level": "debug",
+        "message": "Early event 3",
+        "event-time": new Date(now - 2000)
     }));
 
     var self = this;
