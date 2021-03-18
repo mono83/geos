@@ -62,6 +62,7 @@ body {margin: 0; padding: 0; background-color: black; color: white;}
 #logWindow .group .entry-info span.message {color: #7ca223;}
 #logWindow .group .entry-warning span.message {color: #fb660a;}
 #logWindow .group .entry-error span.message {color: crimson;}
+#logWindow .group .entry-syserror span.message {color: crimson;}
 #logWindow .group .entry-alert span.message {color: crimson;}
 #logWindow .group .entry-critical span.message {color: crimson;}
 #logWindow .group .entry-emergency span.message {color: crimson;}

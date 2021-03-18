@@ -73,7 +73,7 @@ Entry.prototype.getLevel = function getLevel() {
  */
 Entry.prototype.isError = function isError() {
     let lvl = this.getLevel();
-    return lvl === "error" || lvl === "alert" || lvl === "critical" || lvl === "emergency";
+    return lvl === "error" || lvl === "alert" || lvl === "critical" || lvl === "emergency" || lvl === "syserror";
 };
 /**
  * @returns {string} Error message
